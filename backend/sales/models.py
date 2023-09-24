@@ -1,5 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator
+from stores.models import Store
+from categories.models import Category
 
 
 class Sales(models.Model):
