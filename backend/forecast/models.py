@@ -43,8 +43,6 @@ class DailySalesForecast(models.Model):
     date = models.DateField()
     target = models.PositiveIntegerField()
     
-    class Meta:
-        unique_together = ['sku_forecast', 'date']
 
     def __str__(self):
         return f"{self.sku_forecast} - {self.sku_forecast.sku} - {self.date} - {self.target}"
