@@ -1,6 +1,6 @@
-from .models import Store
 from django.conf import settings
 from django.contrib import admin
+from stores.models import Store
 
 
 class StoreAdmin(admin.ModelAdmin):
