@@ -1,4 +1,4 @@
-from categories.models import Store
+from .models import Store
 from django.conf import settings
 from django.contrib import admin
 

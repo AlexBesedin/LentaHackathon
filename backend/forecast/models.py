@@ -12,7 +12,7 @@ class StoreForecast(models.Model):
         Store, 
         on_delete=models.CASCADE, 
         related_name='forecasts',
-        verbose_name='Магазин'
+        verbose_name='захэшированное id магазина'
         )
     forecast_date = models.DateField(
         verbose_name='Дата прогноза'
@@ -46,7 +46,7 @@ class SkuForecast(models.Model):
         Category, 
         on_delete=models.CASCADE, 
         related_name='sku_forecasts',
-        verbose_name='Товар'
+        verbose_name='захэшированное id товара'
         )
 
     class Meta:
@@ -62,10 +62,10 @@ class DailySalesForecast(models.Model):
         verbose_name='Прогноз товара'
         )
     date = models.DateField(
-        verbose_name='Дата'
+        verbose_name='Дата(день)'
         )
     target = models.PositiveIntegerField(
-        verbose_name='Цель'
+        verbose_name='спрос в ШТ.'
         )
     
     class Meta:
@@ -74,4 +74,5 @@ class DailySalesForecast(models.Model):
     
 
     def __str__(self):
-        return f"{self.sku_forecast} - {self.sku_forecast.sku} - {self.date} - {self.target}"
+        return f"{self.sales_units} - {self.sales_units.sku} - {self.date} - {self.target}"
+

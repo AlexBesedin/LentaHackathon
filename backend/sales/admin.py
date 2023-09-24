@@ -4,13 +4,19 @@ from .models import Sales, SalesRecord
 
 @admin.register(Sales)
 class SalesAdmin(admin.ModelAdmin):
-    list_display = ['store', 'sku']
-    search_fields = ['store__store', 'sku__sku']
+    list_display = (
+        'store', 
+        'sku'
+    )
+    search_fields = (
+        'store__store', 
+        'sku__sku'
+    )
 
 
 @admin.register(SalesRecord)
 class SalesRecordAdmin(admin.ModelAdmin):
-    list_display = [
+    list_display = (
         'fact', 
         'date', 
         'sales_type', 
@@ -18,10 +24,13 @@ class SalesRecordAdmin(admin.ModelAdmin):
         'sales_units_promo', 
         'sales_rub', 
         'sales_rub_promo'
-        ]
-    search_fields = [
+    )
+    search_fields = (
         'fact__store__store', 
         'fact__sku__sku', 
         'date'
-        ]
-    list_filter = ['sales_type', 'date']
+    )
+    list_filter = (
+        'sales_type', 
+        'date'
+    )

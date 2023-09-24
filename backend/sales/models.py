@@ -11,13 +11,13 @@ class Sales(models.Model):
         Store, 
         on_delete=models.CASCADE, 
         related_name='store_sales',
-        verbose_name='Магазин'
+        verbose_name='захэшированное id магазина'
         )
     sku = models.ForeignKey(
         Category, 
         on_delete=models.CASCADE, 
         related_name='sku_sales',
-        verbose_name='Товар'
+        verbose_name='захэшированное id товара'
         )
     
     class Meta:
@@ -40,25 +40,25 @@ class SalesRecord(models.Model):
         verbose_name='Дата'
         )
     sales_type = models.IntegerField(
-        verbose_name='Тип продаж'
+        verbose_name='флаг наличия промо'
         )
     sales_units = models.IntegerField(
         validators=[MinValueValidator(0)],
-        verbose_name='Количество единиц'
+        verbose_name='число проданных товаров без признака промо'
         )
     sales_units_promo = models.IntegerField(
         validators=[MinValueValidator(0)],
-        verbose_name='Количество акционных единиц'
+        verbose_name='число проданных товаров с признаком промо'
         )
     sales_rub = models.DecimalField(
         max_digits=10, 
         decimal_places=2,
-        verbose_name='Продажи в рублях'
+        verbose_name='продажи без признака промо в РУБ'
         )
     sales_rub_promo = models.DecimalField(
         max_digits=10, 
         decimal_places=2,
-        verbose_name='Акционные продажи в рублях'
+        verbose_name='продажи с признаком промо в РУБ;'
         )
     
     class Meta:
