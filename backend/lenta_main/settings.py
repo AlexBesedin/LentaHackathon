@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'categories',
     'stores',
     'api',
+    'forecast',
 ]
 
 MIDDLEWARE = [
