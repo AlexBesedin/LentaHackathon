@@ -13,7 +13,7 @@ class StoreForecastAdmin(admin.ModelAdmin):
         'forecast_date'
     )
     list_filter = (
-        'forecast_date'
+        'forecast_date',
     )
 
 
@@ -28,7 +28,7 @@ class SkuForecastAdmin(admin.ModelAdmin):
         'sku__sku'
     )
     list_filter = (
-        'forecast'
+        'forecast',
     )
 
 
@@ -43,7 +43,7 @@ class DailySalesForecastAdmin(admin.ModelAdmin):
         'sales_units__sku__sku', 
         'date'
     )
-    list_filter = (
+    list_filter = [
         'date', 
         'sales_units'
-    )
+    ]
