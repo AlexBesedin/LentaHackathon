@@ -30,7 +30,7 @@ class StoreForecast(models.Model):
         verbose_name_plural = 'Прогнозы магазинов'
 
     def __str__(self):
-        return f"{self.store.store_id} - {self.forecast_date}"
+        return f"{self.store} - {self.forecast_date}"
 
 
 class SkuForecast(models.Model):
