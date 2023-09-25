@@ -60,7 +60,7 @@ class Category(models.Model):
         verbose_name='захэшированное id товара',
     )
     group = models.ForeignKey(
-        'categories.Category',
+        Group,
         on_delete=models.CASCADE,
         related_name='groups'
     )
