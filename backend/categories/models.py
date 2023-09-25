@@ -58,7 +58,7 @@ class Subcategory(models.Model):
     class Meta:
         verbose_name = "Субкатегория"
         verbose_name_plural = "Субкатегории"
-        ordering = ("category",)
+        # ordering = ("category",)
 
     def __str__(self):
         return self.category

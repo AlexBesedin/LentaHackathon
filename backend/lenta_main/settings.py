@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'api',
     'forecast',
     'users',
-    'celery',
+    # 'celery',
 ]
 
 MIDDLEWARE = [
