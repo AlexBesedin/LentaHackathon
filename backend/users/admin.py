@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser
+from django.utils.translation import gettext_lazy as _
+
+from .models import CustomUser, Roles
 
 
 @admin.register(CustomUser)
@@ -10,38 +12,22 @@ class CustomUserAdmin(UserAdmin):
         "email",
         "first_name",
         "last_name",
-        "is_superuser",
-        "last_login",
-        "date_joined",
         "is_active",
+        "is_staff",
+        "is_superuser",
+        "date_joined",
+        "role",
     )
     search_fields = ("username", "email")
-    ordering = ("username",)
-
+    ordering = ("-date_joined",)
     fieldsets = (
         (None, {"fields": ("username", "password")}),
-        (("Personal info"), {"fields": ("first_name", "last_name", "email")}),
-        (
-            ("Permissions"),
-            {
-                "fields": (
-                    "is_active",
-                    "is_staff",
-                    "is_superuser",
-                    "groups",
-                    "user_permissions",
-                )
-            },
-        ),
-        (("Important dates"), {"fields": ("last_login", "date_joined")}),
+        (_("Personal info"), {"fields": ("first_name", "last_name", "email")}),
+        (_("Permissions"), {"fields": ("is_active", "is_staff", "is_superuser", "groups", "user_permissions")}),
+        (_("Important dates"), {"fields": ("last_login", "date_joined")}),
+        (_("Roles"), {"fields": ("role",)}),
     )
-
     add_fieldsets = (
-        (
-            None,
-            {
-                "classes": ("wide",),
-                "fields": ("username", "email", "password1", "password2"),
-            },
-        ),
+        (None, {"classes": ("wide",), "fields": ("username", "email", "password1", "password2", "role")}),
     )
+    list_filter = ("role",) + UserAdmin.list_filter
