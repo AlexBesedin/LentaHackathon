@@ -1,4 +1,3 @@
-from categories.models import Category
 from django.db import models
 
 
@@ -19,12 +18,18 @@ class Group(models.Model):
         return self.group
 
 
-class CateroryProduct(models.Model):
+class CategoryProduct(models.Model):
     """Класс Категория продуктовой иерархии."""
 
     category = models.CharField(
         max_length=50,
         verbose_name='захэшированная категория товара',
+    )
+
+    group = models.ForeignKey(
+        Group,
+        on_delete=models.CASCADE,
+        related_name='groups'
     )
 
     class Meta:
@@ -44,6 +49,12 @@ class Subcategory(models.Model):
         verbose_name='захэшированная подкатегория товара',
     )
 
+    category = models.ForeignKey(
+        CategoryProduct,
+        on_delete=models.CASCADE,
+        related_name='categories'
+    )
+
     class Meta:
         verbose_name = "Субкатегория"
         verbose_name_plural = "Субкатегории"
@@ -61,12 +72,12 @@ class Category(models.Model):
         verbose_name='захэшированное id товара',
     )
     group = models.ForeignKey(
-        Category,
+        Group,
         on_delete=models.CASCADE,
         related_name='groups'
     )
     category = models.ForeignKey(
-        CateroryProduct,
+        CategoryProduct,
         on_delete=models.CASCADE,
         related_name='categories'
     )
