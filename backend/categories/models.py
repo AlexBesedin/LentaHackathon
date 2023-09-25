@@ -74,17 +74,17 @@ class Category(models.Model):
     group = models.ForeignKey(
         Group,
         on_delete=models.CASCADE,
-        related_name='groups'
+        related_name='main_groups'
     )
     category = models.ForeignKey(
         CategoryProduct,
         on_delete=models.CASCADE,
-        related_name='categories'
+        related_name='main_categories'
     )
     subcategory = models.ForeignKey(
         Subcategory,
         on_delete=models.CASCADE,
-        related_name='subcategories'
+        related_name='main_subcategories'
     )
     uom = models.PositiveIntegerField(
         verbose_name='маркер, обозначающий продаётся товар на вес или в ШТ',
