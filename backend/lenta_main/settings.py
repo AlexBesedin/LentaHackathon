@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'forecast',
     'users',
     # 'celery',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
