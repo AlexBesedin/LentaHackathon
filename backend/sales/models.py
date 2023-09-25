@@ -1,7 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator
 from stores.models import Store
-from categories.models import Category
 
 
 class Sales(models.Model):
@@ -14,7 +13,7 @@ class Sales(models.Model):
         verbose_name='захэшированное id магазина'
         )
     sku = models.ForeignKey(
-        Category, 
+        'categories.Category', 
         on_delete=models.CASCADE, 
         related_name='sku_sales',
         verbose_name='захэшированное id товара'

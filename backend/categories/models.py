@@ -1,4 +1,3 @@
-from categories.models import Category
 from django.db import models
 
 
@@ -47,7 +46,7 @@ class Subcategory(models.Model):
     class Meta:
         verbose_name = "Субкатегория"
         verbose_name_plural = "Субкатегории"
-        ordering = ("category",)
+        # ordering = ("category",)
 
     def __str__(self):
         return self.category
@@ -61,7 +60,7 @@ class Category(models.Model):
         verbose_name='захэшированное id товара',
     )
     group = models.ForeignKey(
-        Category,
+        'categories.Category',
         on_delete=models.CASCADE,
         related_name='groups'
     )
