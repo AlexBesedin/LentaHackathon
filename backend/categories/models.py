@@ -97,8 +97,8 @@ class Category(models.Model):
             'subcategory',
             'sku',
         )
-        verbose_name = 'Категория'
-        verbose_name_plural = 'Категории'
+        verbose_name = 'Свобная таблица категории'
+        verbose_name_plural = 'Свобная таблица категорий'
 
     def __str__(self):
         return self.group
