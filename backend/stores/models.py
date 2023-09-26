@@ -101,7 +101,7 @@ class Size(models.Model):
 
 
 class Store(models.Model):
-    """Класс магазинов продуктовой иерархии."""
+    """Сводная таблица магазинов продуктовой иерархии."""
 
     store = models.ForeignKey(
         Stores,
@@ -137,8 +137,8 @@ class Store(models.Model):
 
     class Meta:
         ordering = ('store',)
-        verbose_name = 'Магазин'
-        verbose_name_plural = 'Магазины'
+        verbose_name = 'Сводная таблица магазина'
+        verbose_name_plural = 'Сводная таблица магазинов'
 
     def __str__(self):
         return self.store
