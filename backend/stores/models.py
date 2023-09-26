@@ -136,6 +136,7 @@ class Store(models.Model):
     )
     is_active = models.BooleanField(
         verbose_name='флаг активного магазина на данный момент',
+        null=True
     )
 
     class Meta:
