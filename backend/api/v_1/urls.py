@@ -1,9 +1,8 @@
-# from api.v_1.views import (CategoryViewSet, Forecast_archiveViewSet, SaleViewSet,
-#                        StoreViewSet)
-from django.urls import include, path, re_path
+from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 from api.v_1.users.views import CreateUserView, SetSuperuserView
+from api.v_1.sales.views import SalesViewSet
 
 
 app_name = 'api'
@@ -11,7 +10,7 @@ app_name = 'api'
 v1_router = DefaultRouter()
 
 # v1_router.register('stores', StoreViewSet, basename='stores')
-# v1_router.register('sales', SaleViewSet, basename='sales')
+v1_router.register('sales', SalesViewSet, basename='sales')
 # v1_router.register('categories', CategoryViewSet, basename='categories')
 # v1_router.register('forecast_archive', Forecast_archiveViewSet,
 #                    basename='forecast_archive')
