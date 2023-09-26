@@ -89,6 +89,7 @@ class Size(models.Model):
 
     size = models.IntegerField(
         verbose_name='id типа размера магазина',
+        null=True,
     )
 
     class Meta:
@@ -128,8 +129,10 @@ class Store(models.Model):
         on_delete=models.CASCADE,
         related_name='locs'
     )
-    size = models.IntegerField(
-        verbose_name='id типа размера магазина',
+    size = models.ForeignKey(
+        Size,
+        on_delete=models.CASCADE,
+        related_name='sizes',
     )
     is_active = models.BooleanField(
         verbose_name='флаг активного магазина на данный момент',

@@ -86,7 +86,8 @@ class Category(models.Model):
         on_delete=models.CASCADE,
         related_name='main_subcategories'
     )
-    uom = models.PositiveIntegerField(
+    uom = models.CharField(
+        max_length=50,
         verbose_name='маркер, обозначающий продаётся товар на вес или в ШТ',
     )
 
