@@ -65,7 +65,7 @@ class Type_format(models.Model):
         verbose_name_plural = 'Форматы магазинов'
 
     def __str__(self):
-        return self.type_format
+        return str(self.type_format)
 
 
 class Location(models.Model):
@@ -81,7 +81,7 @@ class Location(models.Model):
         verbose_name_plural = 'Типы локаций магазинов'
 
     def __str__(self):
-        return self.loc
+        return str(self.loc)
 
 
 class Size(models.Model):
@@ -98,7 +98,7 @@ class Size(models.Model):
         verbose_name_plural = 'Размеры'
 
     def __str__(self):
-        return self.size
+        return str(self.size)
 
 
 class Store(models.Model):
@@ -144,4 +144,4 @@ class Store(models.Model):
         verbose_name_plural = 'Сводная таблица магазинов'
 
     def __str__(self):
-        return self.store
+        return str(self.store)

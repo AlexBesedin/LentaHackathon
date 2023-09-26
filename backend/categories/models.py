@@ -61,7 +61,7 @@ class Subcategory(models.Model):
         # ordering = ("category",)
 
     def __str__(self):
-        return self.category
+        return self.subcategory
 
 
 class Category(models.Model):
@@ -102,4 +102,4 @@ class Category(models.Model):
         verbose_name_plural = 'Свобная таблица категорий'
 
     def __str__(self):
-        return self.group
+        return self.sku
