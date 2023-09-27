@@ -14,6 +14,4 @@ class StoreSerializer(serializers.ModelSerializer):
             'loc',
             'size',
             'is_active',
-            ]
-
-
+        ]

@@ -1,6 +1,5 @@
 import csv
 
-
 from django.core.management.base import BaseCommand
 from stores.models import Store
 
@@ -11,13 +10,14 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         with open('data/st_df.csv', encoding='utf-8') as file:
             file_reader = csv.reader(file)
+            next(file_reader)
             for row in file_reader:
                 Store.objects.get_or_create(
-                    st_id=row[0],
-                    st_city_id=row[1],
-                    st_division_code=row[2],
-                    st_type_format_id=row[3],
-                    st_type_loc_id=row[4],
-                    st_type_size_id=row[5],
-                    st_is_active=row[6],
+                    store=row[0],
+                    city=row[1],
+                    division=row[2],
+                    type_format=row[3],
+                    loc=row[4],
+                    size=row[5],
+                    is_active=bool(row[6]),
                 )
