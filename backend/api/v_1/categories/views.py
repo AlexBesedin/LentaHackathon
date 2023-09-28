@@ -1,26 +1,18 @@
 from categories.filters import CategoryFilter
 from categories.models import Category
 from django.http import JsonResponse
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import permissions, status, viewsets
 from rest_framework.response import Response
 
-from rest_framework import permissions, viewsets
-from django_filters.rest_framework import DjangoFilterBackend
-
-
-from .serializers import CategorySerializer
-
-
-from rest_framework import viewsets, permissions
-from categories.models import Category
 from .serializers import CategorySerializer
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
     """Вьюсет для товарной иерархии."""
-    
+
     queryset = Category.objects.all()
-    # permission_classes = [permissions.IsAdminUser]
+    permission_classes = [permissions.IsAdminUser]
     serializer_class = CategorySerializer
     http_method_names = ['get', 'post', 'put', 'patch', 'delete']
     lookup_field = 'sku'
@@ -29,7 +21,6 @@ class CategoryViewSet(viewsets.ModelViewSet):
     filterset_fields = ['sku', 'group', 'category', 'subcategory']
     ordering_fields = '__all__'
 
-    
     def create(self, request, *args, **kwargs):
         """Функция добавления категорий товаров"""
         serializer = self.get_serializer(data=request.data)
@@ -42,7 +33,6 @@ class CategoryViewSet(viewsets.ModelViewSet):
             headers=headers,
         )
 
-      
     def get_categories(request):
         """Функция получения исторических данных по категориям."""
 
