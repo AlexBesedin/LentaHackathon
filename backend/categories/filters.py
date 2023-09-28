@@ -4,9 +4,9 @@ from categories.models import Category
 
 class CategoryFilter(django_filters.FilterSet):
     sku = django_filters.CharFilter(field_name="sku")
-    group = django_filters.NumberFilter(field_name="group__id")
-    category = django_filters.NumberFilter(field_name="category__id")
-    subcategory = django_filters.NumberFilter(field_name="subcategory__id")
+    group = django_filters.CharFilter(field_name="group__group")
+    category = django_filters.CharFilter(field_name="category__category")
+    subcategory = django_filters.CharFilter(field_name="subcategory__subcategory")
 
     class Meta:
         model = Category
