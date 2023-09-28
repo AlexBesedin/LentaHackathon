@@ -1,47 +1,18 @@
-from rest_framework import permissions, viewsets, response, status
-from api.v_1.forecast.serializers import StoreForecastSerializer
+from rest_framework import mixins, viewsets
+from rest_framework.response import Response
 from forecast.models import StoreForecast
+from .serializers import StoreForecastSerializer
 
 
-class ForecastViewSet(viewsets.ModelViewSet):
+class StoreForecastViewSet(mixins.RetrieveModelMixin,
+                           mixins.ListModelMixin,
+                           viewsets.GenericViewSet):
     """
-    list:
-    Возвращает список всех прогнозов.
-    
-    retrieve:
-    Возвращает конкретный прогноз по id.
-    
-    create:
-    Создает новый прогноз.
+    ViewSet для обработки GET запросов.
     """
     queryset = StoreForecast.objects.all()
     serializer_class = StoreForecastSerializer
-    permission_classes = [permissions.IsAdminUser]
-    http_method_names = ['get', 'post']
     
     def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = self.get_serializer(queryset, many=True)
-        data = []
-        for store_forecast_representation in serializer.data:
-            data.extend(store_forecast_representation)
-        return response.Response({'data': data})
-
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance)
-        return response.Response(serializer.data)
-    
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return response.Response(
-                serializer.data, 
-                status=status.HTTP_201_CREATED
-            )
-        return response.Response(
-            serializer.errors, 
-            status=status.HTTP_400_BAD_REQUEST
-        )
-    
+        response = super().list(request, *args, **kwargs)
+        return Response({'data': response.data})
