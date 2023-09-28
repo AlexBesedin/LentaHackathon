@@ -67,7 +67,10 @@ class Subcategory(models.Model):
 
 class Category(models.Model):
     """Класс Категории продуктов."""
-
+    UOM_CHOICES = [
+        ('штука', 'Штука'),
+        ('вес', 'Вес'),
+    ]
     sku = models.CharField(
         max_length=50,
         verbose_name='захэшированное id товара',
@@ -89,6 +92,7 @@ class Category(models.Model):
     )
     uom = models.IntegerField(
         validators=[MinValueValidator(0)],
+        choices=UOM_CHOICES,
         verbose_name='маркер, обозначающий продаётся товар на вес или в ШТ',
     )
 

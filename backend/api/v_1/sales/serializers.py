@@ -96,6 +96,8 @@ class SalesSerializer(serializers.ModelSerializer):
     """Сериалайзер продаж."""
 
     fact = SalesRecordSerialazier()
+    store = serializers.StringRelatedField()
+    sku = serializers.StringRelatedField()
 
     class Meta:
         model = Sales
