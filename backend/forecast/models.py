@@ -14,6 +14,13 @@ class StoreForecast(models.Model):
         related_name='forecasts',
         verbose_name='захэшированное id магазина'
         )
+    sku = models.ForeignKey(
+        Category, 
+        on_delete=models.CASCADE, 
+        related_name='sku_forecasts',
+        verbose_name='захэшированное id товара'
+        )
+    
     forecast_date = models.DateField(
         verbose_name='Дата прогноза'
         )
@@ -33,31 +40,11 @@ class StoreForecast(models.Model):
         return f"{self.store} - {self.forecast_date}"
 
 
-class SkuForecast(models.Model):
-    """Модель прогноза товара"""
-    
-    forecast = models.ForeignKey(
-        StoreForecast, 
-        on_delete=models.CASCADE, 
-        related_name='sku_forecasts',
-        verbose_name='Прогноз магазина'
-        )
-    sku = models.ForeignKey(
-        Category, 
-        on_delete=models.CASCADE, 
-        related_name='sku_forecasts',
-        verbose_name='захэшированное id товара'
-        )
-
-    class Meta:
-        verbose_name = 'Прогноз товара'
-        verbose_name_plural = 'Прогнозы товаров'
-
 
 class DailySalesForecast(models.Model):
     """Модель ежедневного прогноза продаж"""
-    sales_units = models.ForeignKey(
-        SkuForecast, 
+    forecast_sku_id  = models.ForeignKey(
+        StoreForecast, 
         on_delete=models.CASCADE,
         verbose_name='Прогноз товара'
         )
@@ -74,5 +61,4 @@ class DailySalesForecast(models.Model):
     
 
     def __str__(self):
-        return f"{self.sales_units} - {self.sales_units.sku} - {self.date} - {self.target}"
-
+        return f"{self.forecast_sku_id} - {self.forecast_sku_id.sku} - {self.date} - {self.target}"

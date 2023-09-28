@@ -1,26 +1,37 @@
 import csv
-
-from categories.models import Category
+from datetime import datetime
 from django.core.management.base import BaseCommand
-from forecast.models import DailySalesForecast
-from stores.models import Stores
+from forecast.models import StoreForecast, DailySalesForecast
+from stores.models import Store
+from categories.models import Category
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class Command(BaseCommand):
-    help = "Импорт данных магазинов из файла в БД"
+    help = "Импорт данных прогнозов из файла в БД"
 
     def handle(self, *args, **options):
         with open('data/sales_submission.csv', encoding='utf-8') as file:
             file_reader = csv.reader(file)
             next(file_reader)
             for row in file_reader:
-                Stores.objects.get_or_create(
-                    store=row[0],
+                try:
+                    store = Store.objects.get(store=row[0])
+                    sku = Category.objects.get(sku=row[1])
+                except ObjectDoesNotExist as e:
+                    self.stdout.write(self.style.ERROR(f"Объект не найден: {e}"))
+                    continue
+                forecast_date = datetime.strptime(row[2], '%Y-%m-%d').date()
+                target = int(row[3])
+                store_forecast, created = StoreForecast.objects.get_or_create(
+                    store=store,
+                    sku=sku,
+                    forecast_date=forecast_date,
                 )
-                Category.objects.get_or_create(
-                    sku=row[0],
+                DailySalesForecast.objects.update_or_create(
+                    forecast_sku_id=store_forecast,
+                    date=forecast_date,
+                    defaults={'target': target},
                 )
-                DailySalesForecast.get_or_create(
-                    date=row[2],
-                    target=row[3],
-                )
+                self.stdout.write(self.style.SUCCESS(f"Успешно добавлено/обновлено прогноз для {store} и {sku} на {forecast_date}"))
+

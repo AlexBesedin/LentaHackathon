@@ -1,6 +1,6 @@
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
-from .serializers import MyUserCreateSerializer, SetSuperuserSerializer
+from .serializers import MyUserCreateSerializer, PasswordChangeSerializer, PasswordResetSerializer
 from users.models import CustomUser
 
 
@@ -20,26 +20,33 @@ class CreateUserView(generics.CreateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
-class SetSuperuserView(generics.GenericAPIView):
-    """Назначит пользователя суперюзером"""
-    serializer_class = SetSuperuserSerializer
+class ChangePasswordView(generics.GenericAPIView):
+    """Изменить пароль"""
+    serializer_class = PasswordChangeSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            return Response(
+                {'detail': 'Пароль успешно обновлен'}, 
+                status=status.HTTP_200_OK
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ResetPasswordView(generics.GenericAPIView):
+    """Сбросить пароль"""
+    serializer_class = PasswordResetSerializer
     permission_classes = [permissions.IsAdminUser]
 
     def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data)
-        
+        serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-            user_id = serializer.validated_data.get("id")
-            username = serializer.validated_data.get("username")
-            
-            try:
-                user = CustomUser.objects.get(id=user_id, username=username)
-            except CustomUser.DoesNotExist:
-                return Response({"error": "User does not exist"}, status=status.HTTP_404_NOT_FOUND)
-            
-            user.is_superuser = True
-            user.save()
-            
-            return Response({"success": f"User {user.username} is now a superuser"}, status=status.HTTP_200_OK)
-        
+            user = serializer.save()
+            return Response(
+                {'detail': 'Пароль успешно сброшен'}, 
+                status=status.HTTP_200_OK
+            )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
