@@ -1,7 +1,9 @@
 from rest_framework import generics, permissions, status
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import MyUserCreateSerializer, PasswordChangeSerializer, PasswordResetSerializer
 from users.models import CustomUser
+from django.contrib.auth import logout
 
 
 class CreateUserView(generics.CreateAPIView):
@@ -50,3 +52,12 @@ class ResetPasswordView(generics.GenericAPIView):
                 status=status.HTTP_200_OK
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LogoutView(APIView):
+    """Выйти из системы"""
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        logout(request)
+        return Response(status=status.HTTP_200_OK)
