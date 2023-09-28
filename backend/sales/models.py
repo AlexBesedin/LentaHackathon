@@ -5,7 +5,6 @@ from stores.models import Store
 
 class SalesRecord(models.Model):
     """Модель записей продаж"""
-
     date = models.DateField(
         verbose_name='Дата'
     )

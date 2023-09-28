@@ -7,7 +7,8 @@ class CategoryFilter(django_filters.FilterSet):
     group = django_filters.CharFilter(field_name="group__group")
     category = django_filters.CharFilter(field_name="category__category")
     subcategory = django_filters.CharFilter(field_name="subcategory__subcategory")
+    uom = django_filters.CharFilter(field_name="uom")
 
     class Meta:
         model = Category
-        fields = ['sku', 'group', 'category', 'subcategory']
+        fields = ['sku', 'group', 'category', 'subcategory', 'uom']

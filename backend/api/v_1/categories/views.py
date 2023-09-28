@@ -1,4 +1,4 @@
-from categories.filters import CategoryFilter
+from api.v_1.categories.filters import CategoryFilter
 from categories.models import Category
 from django.http import JsonResponse
 from rest_framework import permissions, status, viewsets
