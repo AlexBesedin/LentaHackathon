@@ -13,6 +13,7 @@ class SalesViewSet(viewsets.ModelViewSet):
     serializer_class = SalesSerializer
     permission_classes = [permissions.IsAdminUser]
     http_method_names = ['get', 'post']
+    pagination_class = None
 
     def create(self, request, *args, **kwargs):
         """Функция создания категории."""
