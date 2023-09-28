@@ -1,49 +1,22 @@
 from django.contrib import admin
-from .models import StoreForecast, SkuForecast, DailySalesForecast
+from .models import StoreForecast, DailySalesForecast
 
 
 @admin.register(StoreForecast)
 class StoreForecastAdmin(admin.ModelAdmin):
-    list_display = (
-        'store', 
-        'forecast_date'
-    )
-    search_fields = (
-        'store__store_id', 
-        'forecast_date'
-    )
-    list_filter = (
-        'forecast_date',
-    )
-
-
-@admin.register(SkuForecast)
-class SkuForecastAdmin(admin.ModelAdmin):
-    list_display = (
-        'forecast', 
-        'sku'
-    )
-    search_fields = (
-        'forecast__store__store_id', 
-        'sku__sku'
-    )
-    list_filter = (
-        'forecast',
-    )
+    list_display = ('store', 'sku', 'forecast_date',)
+    search_fields = ('store__name', 'sku__name',)
+    list_filter = ('forecast_date', 'store',)
+    
+    # def has_add_permission(self, request):
+    #     return False
 
 
 @admin.register(DailySalesForecast)
 class DailySalesForecastAdmin(admin.ModelAdmin):
-    list_display = (
-        'sales_units', 
-        'date', 'target'
-    )
-    search_fields = (
-        'sales_units__forecast__store__store_id', 
-        'sales_units__sku__sku', 
-        'date'
-    )
-    list_filter = [
-        'date', 
-        'sales_units'
-    ]
+    list_display = ('forecast_sku_id', 'date', 'target',)
+    search_fields = ('forecast_sku_id__store__name', 'forecast_sku_id__sku__name',)
+    list_filter = ('date', 'forecast_sku_id',)
+    
+    # def has_add_permission(self, request):
+    #     return False
