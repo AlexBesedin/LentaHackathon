@@ -5,9 +5,6 @@ from stores.models import Store
 
 class SalesRecord(models.Model):
     """Модель записей продаж"""
-    UNIT_TYPE_CHOICES = [
-        ('rub', 'Рубли'),
-    ]
     date = models.DateField(
         verbose_name='Дата'
     )
@@ -23,13 +20,11 @@ class SalesRecord(models.Model):
     sales_rub = models.DecimalField(
         max_digits=10,
         decimal_places=2,
-        choices=UNIT_TYPE_CHOICES,
         verbose_name='продажи без признака промо в РУБ'
     )
     sales_run_promo = models.DecimalField(
         max_digits=10,
         decimal_places=2,
-        choices=UNIT_TYPE_CHOICES,
         verbose_name='продажи с признаком промо в РУБ;'
     )
 
