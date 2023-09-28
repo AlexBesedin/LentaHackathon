@@ -1,3 +1,4 @@
+from django.core.validators import MinValueValidator
 from django.db import models
 
 
@@ -58,7 +59,7 @@ class Subcategory(models.Model):
     class Meta:
         verbose_name = "Субкатегория"
         verbose_name_plural = "Субкатегории"
-        # ordering = ("category",)
+        ordering = ("subcategory",)
 
     def __str__(self):
         return self.subcategory
@@ -86,8 +87,8 @@ class Category(models.Model):
         on_delete=models.CASCADE,
         related_name='main_subcategories'
     )
-    uom = models.CharField(
-        max_length=50,
+    uom = models.IntegerField(
+        validators=[MinValueValidator(0)],
         verbose_name='маркер, обозначающий продаётся товар на вес или в ШТ',
     )
 

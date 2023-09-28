@@ -1,4 +1,5 @@
 from categories.models import Category
+from django.http import JsonResponse
 from rest_framework import permissions, status, viewsets
 from rest_framework.response import Response
 
@@ -9,7 +10,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
     """Вьюсет для товарной иерархии."""
 
     queryset = Category.objects.all()
-    permission_classes = [permissions.IsAdminUser]
+    # permission_classes = [permissions.IsAdminUser]
     serializer_class = CategorySerializer
     http_method_names = ['get', 'post']
 
@@ -25,3 +26,18 @@ class CategoryViewSet(viewsets.ModelViewSet):
             status=status.HTTP_201_CREATED,
             headers=headers,
         )
+
+    def get_categories(request):
+        """Функция получения исторических данных по категориям."""
+
+        categories = Category.objects.all()
+        data = []
+        for category in categories:
+            data.append({
+                'sku': category.sku,
+                'group': category.group.group,
+                'category': category.category,
+                'subcategory': category.subcategory.subcategory,
+                'uom': category.uom
+            })
+        return JsonResponse({'data': data})
