@@ -29,16 +29,10 @@ class CustomUser(AbstractUser):
         max_length=150,
         verbose_name = 'Фамилия'
         )
-    date_joined = models.DateTimeField(
-        auto_now_add=True
-        )
-    is_active = models.BooleanField(
-        default=True
-        )
     role = models.CharField(
         max_length=20,
         choices=Roles.choices,
-        default=Roles.USER,
+        default=Roles.ADMIN,
     )
     
     def __str__(self):
