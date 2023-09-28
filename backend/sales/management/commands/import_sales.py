@@ -1,9 +1,10 @@
 import csv
-
-from categories.models import Category
+from datetime import datetime
 from django.core.management.base import BaseCommand
-from sales.models import SalesRecord
+from sales.models import SalesRecord, Sales
 from stores.models import Store
+from categories.models import Category
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class Command(BaseCommand):
@@ -14,15 +15,33 @@ class Command(BaseCommand):
             file_reader = csv.reader(file)
             next(file_reader)
             for row in file_reader:
-                SalesRecord.objects.get_or_create(
-                    date=row[2],
-                    sales_type=int(row[3]),
-                    sales_units=float(row[4]),
-                    sales_units_promo=float(row[5]),
-                    sales_rub=float(row[6]),
-                    sales_run_promo=float(row[7]),
-                ),
-                Category.objects.get_or_create(
-                    sku=row[1],
-                ),
-                Store.objects.get_or_create(store=row[0],)
+                try:
+                    store = Store.objects.get(store=row[0])
+                    sku = Category.objects.get(sku=row[1])
+                except ObjectDoesNotExist as e:
+                    self.stdout.write(self.style.ERROR(f"Объект не найден: {e}"))
+                    continue
+                
+                date = datetime.strptime(row[2], '%Y-%m-%d').date()
+                sales_type = int(row[3])
+                sales_units = float(row[4])
+                sales_units_promo = float(row[5])
+                sales_rub = float(row[6])
+                sales_run_promo = float(row[7])
+                
+                sales_record, created = SalesRecord.objects.get_or_create(
+                    date=date,
+                    sales_type=sales_type,
+                    sales_units=sales_units,
+                    sales_units_promo=sales_units_promo,
+                    sales_rub=sales_rub,
+                    sales_run_promo=sales_run_promo,
+                )
+                
+                sales, created = Sales.objects.get_or_create(
+                    store=store,
+                    sku=sku,
+                    fact=sales_record,
+                )
+                
+                self.stdout.write(self.style.SUCCESS(f"Успешно добавлено/обновлено запись продаж для {store} и {sku} на {date}"))
