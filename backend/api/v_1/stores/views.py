@@ -5,11 +5,11 @@ from stores.models import Store
 from .serializers import StoreSerializer
 
 
-class StoreViewSet(viewsets.ReadOnlyModelViewSet):
+class StoreViewSet(viewsets.ModelViewSet):
     queryset = Store.objects.all()
     permission_classes = [permissions.IsAdminUser]
     serializer_class = StoreSerializer
-    http_method_names = ['get']
+    http_method_names = ['get', 'post', 'put', 'patch', 'delete']
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
