@@ -10,6 +10,7 @@ class StoreViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAdminUser]
     serializer_class = StoreSerializer
     http_method_names = ['get', 'post', 'put', 'patch', 'delete']
+    lookup_field = 'store'
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
