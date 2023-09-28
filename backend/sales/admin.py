@@ -1,36 +1,52 @@
 from django.contrib import admin
+
 from .models import Sales, SalesRecord
 
 
-@admin.register(Sales)
 class SalesAdmin(admin.ModelAdmin):
     list_display = (
-        'store', 
-        'sku'
+        'store',
+        'sku',
+        'fact',
     )
     search_fields = (
-        'store__store', 
-        'sku__sku'
-    )
-
-
-@admin.register(SalesRecord)
-class SalesRecordAdmin(admin.ModelAdmin):
-    list_display = (
-        'fact', 
-        'date', 
-        'sales_type', 
-        'sales_units', 
-        'sales_units_promo', 
-        'sales_rub', 
-        'sales_rub_promo'
-    )
-    search_fields = (
-        'fact__store__store', 
-        'fact__sku__sku', 
-        'date'
+        'store',
+        'sku',
+        'fact',
     )
     list_filter = (
-        'sales_type', 
-        'date'
+       'store',
+       'sku',
+       'fact',
     )
+
+
+class SalesRecordAdmin(admin.ModelAdmin):
+    list_display = (
+        'date',
+        'sales_type',
+        'sales_units',
+        'sales_units_promo',
+        'sales_rub',
+        'sales_run_promo',
+    )
+    search_fields = (
+        'date',
+        'sales_type',
+        'sales_units',
+        'sales_units_promo',
+        'sales_rub',
+        'sales_run_promo',
+    )
+    list_filter = (
+        'date',
+        'sales_type',
+        'sales_units',
+        'sales_units_promo',
+        'sales_rub',
+        'sales_run_promo',
+    )
+
+
+admin.site.register(Sales, SalesAdmin)
+admin.site.register(SalesRecord, SalesRecordAdmin)
