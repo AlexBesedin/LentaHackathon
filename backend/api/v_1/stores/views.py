@@ -10,7 +10,7 @@ from stores.models import Store
 from .serializers import StoreSerializer
 
 
-class StoreViewSet(viewsets.ModelViewSet):
+class StoreViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Store.objects.all()
     permission_classes = [permissions.IsAdminUser]
     serializer_class = StoreSerializer
