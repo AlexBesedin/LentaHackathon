@@ -1,8 +1,6 @@
 import csv
-
 from django.core.management.base import BaseCommand
-from stores.models import Store
-
+from stores.models import Store, StoreID
 
 class Command(BaseCommand):
     help = "Импорт данных магазинов из файла в БД"
@@ -12,12 +10,18 @@ class Command(BaseCommand):
             file_reader = csv.reader(file)
             next(file_reader)
             for row in file_reader:
-                Store.objects.get_or_create(
-                    store=row[0],
-                    city=row[1],
-                    division=row[2],
-                    type_format=row[3],
-                    loc=row[4],
-                    size=row[5],
-                    is_active=bool(row[6]),
-                )
+                store_id, created = StoreID.objects.get_or_create(title=row[0])
+                if store_id:
+                    Store.objects.update_or_create(
+                        store=store_id,
+                        defaults={
+                            'city': row[1],
+                            'division': row[2],
+                            'type_format': int(row[3]),
+                            'loc': int(row[4]),
+                            'size': int(row[5]),
+                            'is_active': bool(row[6]),
+                        }
+                    )
+                    self.stdout.write(self.style.SUCCESS(f"Успешно добавлено/обновлено магазин {store_id.title}"))
+

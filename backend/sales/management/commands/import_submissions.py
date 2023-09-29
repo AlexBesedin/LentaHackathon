@@ -2,7 +2,7 @@ import csv
 from datetime import datetime
 from django.core.management.base import BaseCommand
 from forecast.models import StoreForecast, DailySalesForecast
-from stores.models import Store
+from stores.models import Store, StoreID
 from categories.models import Category
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -16,7 +16,8 @@ class Command(BaseCommand):
             next(file_reader)
             for row in file_reader:
                 try:
-                    store = Store.objects.get(store=row[0])
+                    store_id = StoreID.objects.get(title=row[0])
+                    store = Store.objects.get(store=store_id)
                     sku = Category.objects.get(sku=row[1])
                 except ObjectDoesNotExist as e:
                     self.stdout.write(self.style.ERROR(f"Объект не найден: {e}"))
@@ -34,4 +35,3 @@ class Command(BaseCommand):
                     defaults={'target': target},
                 )
                 self.stdout.write(self.style.SUCCESS(f"Успешно добавлено/обновлено прогноз для {store} и {sku} на {forecast_date}"))
-

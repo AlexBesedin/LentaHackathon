@@ -1,8 +1,8 @@
 from django.contrib import admin
-
 from .models import Sales, SalesRecord
 
 
+@admin.register(Sales)
 class SalesAdmin(admin.ModelAdmin):
     list_display = (
         'store',
@@ -21,6 +21,7 @@ class SalesAdmin(admin.ModelAdmin):
     )
 
 
+@admin.register(SalesRecord)
 class SalesRecordAdmin(admin.ModelAdmin):
     list_display = (
         'date',
@@ -47,6 +48,3 @@ class SalesRecordAdmin(admin.ModelAdmin):
         'sales_run_promo',
     )
 
-
-admin.site.register(Sales, SalesAdmin)
-admin.site.register(SalesRecord, SalesRecordAdmin)
