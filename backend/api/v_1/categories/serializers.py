@@ -3,9 +3,15 @@ from rest_framework import serializers
 
 
 class CategorySerializer(serializers.ModelSerializer):
-    group = serializers.PrimaryKeyRelatedField(queryset=Group.objects.all())
-    category = serializers.PrimaryKeyRelatedField(queryset=CategoryProduct.objects.all())
-    subcategory = serializers.PrimaryKeyRelatedField(queryset=Subcategory.objects.all())
+    group = serializers.PrimaryKeyRelatedField(
+        queryset=Group.objects.all()
+    )
+    category = serializers.PrimaryKeyRelatedField(
+        queryset=CategoryProduct.objects.all()
+    )
+    subcategory = serializers.PrimaryKeyRelatedField(
+        queryset=Subcategory.objects.all()
+    )
 
     class Meta:
         model = Category

@@ -6,12 +6,13 @@ class StoreIDSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = StoreID 
-        fields = ['title']  
+        fields = '__all__' 
         
         
 class StoreSerializer(serializers.ModelSerializer):
-    store = StoreIDSerializer()
-
+    # store = StoreIDSerializer()
+    store = serializers.SerializerMethodField()
+    
     class Meta:
         model = Store
         fields = [
@@ -23,3 +24,6 @@ class StoreSerializer(serializers.ModelSerializer):
             'size',
             'is_active',
         ]
+        
+    def get_store(self, obj):
+        return str(obj.store)
