@@ -21,8 +21,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
     filterset_fields = ['sku', 'group__group', 'category__category', 'subcategory__subcategory']
     ordering_fields = '__all__'
     pagination_class = None
-    
-    
+
     def get_queryset(self):
         """
         Этот метод получает все объекты Category и фильтрует их 
@@ -37,10 +36,9 @@ class CategoryViewSet(viewsets.ModelViewSet):
                 filters[field] = value 
         return queryset.filter(**filters)
 
-
     def create(self, request, *args, **kwargs):
         """Функция добавления категорий товаров"""
-        
+
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)

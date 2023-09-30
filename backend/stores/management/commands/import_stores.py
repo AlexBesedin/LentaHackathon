@@ -1,6 +1,8 @@
 import csv
+
 from django.core.management.base import BaseCommand
 from stores.models import Store, StoreID
+
 
 class Command(BaseCommand):
     help = "Импорт данных магазинов из файла в БД"
@@ -23,5 +25,7 @@ class Command(BaseCommand):
                             'is_active': bool(row[6]),
                         }
                     )
-                    self.stdout.write(self.style.SUCCESS(f"Успешно добавлено/обновлено магазин {store_id.title}"))
-
+                    self.stdout.write(self.style.SUCCESS(
+                        f"Успешно добавлено/обновлено магазин {store_id.title}"
+                        )
+                    )
