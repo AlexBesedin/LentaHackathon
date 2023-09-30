@@ -46,6 +46,7 @@ class DailySalesForecast(models.Model):
     forecast_sku_id  = models.ForeignKey(
         StoreForecast, 
         on_delete=models.CASCADE,
+        related_name='sales_units',
         verbose_name='Прогноз товара'
         )
     date = models.DateField(

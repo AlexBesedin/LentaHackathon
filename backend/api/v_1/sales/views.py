@@ -1,20 +1,33 @@
 import json
 from datetime import datetime
 
-from api.v_1.sales.serializers import SalesSerializer
+from django_filters.rest_framework import DjangoFilterBackend
 from django.http import JsonResponse
 from rest_framework import permissions, viewsets
 from rest_framework.response import Response
+
+from api.v_1.sales.serializers import CreateSalesSerializer, SalesSerializer
 from sales.models import Sales, SalesRecord
+from .filters import SalesFilter
 
 
 class SalesViewSet(viewsets.ModelViewSet):
     queryset = Sales.objects.all()
-    serializer_class = SalesSerializer
+    serializer_class = SalesSerializer  
     permission_classes = [permissions.IsAdminUser]
     http_method_names = ['get', 'post']
+    lookup_field = 'store'
     pagination_class = None
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = SalesFilter
+    
+    
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return CreateSalesSerializer
+        return SalesSerializer
 
+    
     def create(self, request, *args, **kwargs):
         """Функция создания категории."""
 
@@ -24,6 +37,7 @@ class SalesViewSet(viewsets.ModelViewSet):
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=201, headers=headers)
 
+
     def list(self, request, *args, **kwargs):
         """Переопределенный метод для GET запроса
         на получение списка объектов Sales."""
@@ -31,6 +45,7 @@ class SalesViewSet(viewsets.ModelViewSet):
         queryset = self.get_queryset()
         serializer = SalesSerializer(queryset, many=True)
         return Response(serializer.data)
+
 
     def get_sales(request):
         """Функция получения исторических данных по продажам."""

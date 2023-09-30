@@ -1,11 +1,11 @@
-from api.v_1.categories.filters import CategoryFilter
-from categories.models import Category
 from django.http import JsonResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import permissions, status, viewsets
 from rest_framework.response import Response
 
 from .serializers import CategorySerializer
+from api.v_1.categories.filters import CategoryFilter
+from categories.models import Category
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -14,7 +14,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     permission_classes = [permissions.IsAdminUser]
     serializer_class = CategorySerializer
-    http_method_names = ['get', 'post', 'put', 'patch', 'delete']
+    http_method_names = ['get']
     lookup_field = 'sku'
     filter_backends = [DjangoFilterBackend]
     filterset_class = CategoryFilter
@@ -23,13 +23,17 @@ class CategoryViewSet(viewsets.ModelViewSet):
     pagination_class = None
 
     def get_queryset(self):
+        """
+        Этот метод получает все объекты Category и фильтрует их 
+        на основе параметров запроса.
+        """
         queryset = Category.objects.all()
-        filter_fields = ['sku', 'group', 'category', 'subcategory']
+        filter_fields = ['sku', 'group__group', 'category__category', 'subcategory__subcategory']
         filters = {}
         for field in filter_fields:
             value = self.request.query_params.get(field, None)
             if value is not None:
-                filters[field] = value
+                filters[field] = value 
         return queryset.filter(**filters)
 
     def create(self, request, *args, **kwargs):
