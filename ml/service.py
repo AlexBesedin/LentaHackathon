@@ -18,3 +18,7 @@
 #     if resp.status_code != 200:
 #         return []
 #     return resp.json()["data"]
+
+# if __name__ == "__main__":
+#     stores = get_stores()
+#     print(stores)
