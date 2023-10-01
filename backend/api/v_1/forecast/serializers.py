@@ -7,12 +7,13 @@ from forecast.models import StoreForecast, DailySalesForecast
 
 
 class DailySalesForecastSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = DailySalesForecast
         fields = [
             'date', 
             'target'
-        ]
+            ]
 
 
 class StoreForecastSerializer(serializers.ModelSerializer):
@@ -52,21 +53,18 @@ class StoreForecastCreateSerializer(serializers.ModelSerializer):
 
     def to_internal_value(self, data):
         internal_value = super().to_internal_value(data)
-
         try:
             internal_value['store'] = Store.objects.get(store__title=data['store'])
         except Store.DoesNotExist:
             raise ValidationError(
-                {"store": "Store with this title does not exist."}
+                {"store": "Магазин с таким названием не существует."}
             )
-
         try:
             internal_value['sku'] = Category.objects.get(sku=data['sku'])
         except Category.DoesNotExist:
             raise ValidationError(
-                {"sku": "Category with this sku does not exist."}
+                {"sku": "Категория с таким артикулом не существует."}
             )
-        
         return internal_value
 
     def create(self, validated_data):

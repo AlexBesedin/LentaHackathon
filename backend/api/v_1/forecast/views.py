@@ -1,39 +1,11 @@
-# from forecast.models import StoreForecast
-# from rest_framework import mixins, viewsets
-# from rest_framework.response import Response
-
-# from .serializers import StoreForecastSerializer
-
-
-# class StoreForecastViewSet(mixins.RetrieveModelMixin,
-#                            mixins.ListModelMixin,
-#                            viewsets.GenericViewSet):
-#     """
-#     ViewSet для обработки GET запросов.
-#     """
-#     queryset = StoreForecast.objects.all()
-#     serializer_class = StoreForecastSerializer
-
-#     def list(self, request, *args, **kwargs):
-#         response = super().list(request, *args, **kwargs)
-#         return Response({'data': response.data})
-
-
 import pandas as pd
-from forecast.models import StoreForecast
-from rest_framework import mixins, viewsets
-from rest_framework.response import Response
-
-from .serializers import StoreForecastSerializer
 
 from rest_framework.response import Response
-from rest_framework import permissions
-from rest_framework import status
+from rest_framework import permissions, status
 from rest_framework.generics import ListCreateAPIView
 
 from forecast.models import StoreForecast
 from .serializers import StoreForecastSerializer, StoreForecastCreateSerializer
-
 
 
 class StoreForecastAPIView(ListCreateAPIView):
@@ -55,22 +27,13 @@ class StoreForecastAPIView(ListCreateAPIView):
         df.to_excel(writer, index=False)
         writer.save()
 
+
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
         data_list = response.data
         file_path = 'data.xlsx'
         self.write_data_to_excel(data_list, file_path)
         return Response({'data': response.data})
-
-
-    
-    
-
-
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = self.get_serializer(queryset, many=True)
-        return Response({"data": serializer.data})
     
     
     def post(self, request, *args, **kwargs):
