@@ -1,11 +1,11 @@
 from api.v_1.categories.views import CategoryViewSet
 from api.v_1.sales.views import SalesViewSet
 from api.v_1.stores.views import StoreViewSet
-from api.v_1.users.views import ChangePasswordView, ResetPasswordView
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
 from api.v_1.forecast.views import StoreForecastAPIView
+from api.v_1.users.views import LoginWithCodeView, PasswordResetRequestView
 
 
 app_name = 'api'
@@ -19,8 +19,8 @@ v1_router.register('categories', CategoryViewSet, basename='categories')
 
 urlpatterns = [
     path('', include(v1_router.urls)),
-    path('users/change-password/', ChangePasswordView.as_view(), name='change-password'),
-    path('users/reset-password/', ResetPasswordView.as_view(), name='reset-password'),
+    path('users/reset-password/', PasswordResetRequestView.as_view(), name='password-reset-request'),
+    path('users/login-with-code/', LoginWithCodeView.as_view(), name='login-with-code'),
     path('forecast/', StoreForecastAPIView.as_view(), name='forecast'),
     path(r'auth/', include('djoser.urls.authtoken'))
 ]
