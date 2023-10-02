@@ -56,6 +56,7 @@ class StoreID(models.Model):
 
 class Store(models.Model):
     """Сводная таблица магазинов продуктовой иерархии."""
+    STORE_CHOICES = [(0, 'НЕТ'), (1, 'ДА')]
     
     store = models.ForeignKey(
         StoreID,
@@ -83,6 +84,7 @@ class Store(models.Model):
     )
     is_active = models.BooleanField(
         verbose_name='флаг активного магазина на данный момент',
+        choices=STORE_CHOICES,
     )
     
     class Meta:

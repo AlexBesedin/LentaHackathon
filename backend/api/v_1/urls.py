@@ -22,5 +22,5 @@ urlpatterns = [
     path('users/reset-password/', PasswordResetRequestView.as_view(), name='password-reset-request'),
     path('users/login-with-code/', LoginWithCodeView.as_view(), name='login-with-code'),
     path('forecast/', StoreForecastAPIView.as_view(), name='forecast'),
-    path(r'auth/', include('djoser.urls.authtoken'))
+    path('auth/', include('djoser.urls.authtoken'))
 ]
