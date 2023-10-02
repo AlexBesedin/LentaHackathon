@@ -23,5 +23,4 @@ class SalesFilter(filters.FilterSet):
             'sales_units_promo', 
             'sales_rub', 
             'sales_run_promo'
-        ]
-
+            ]

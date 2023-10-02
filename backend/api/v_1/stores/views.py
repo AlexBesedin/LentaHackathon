@@ -14,19 +14,19 @@ class StoreViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Store.objects.all()
     permission_classes = [permissions.IsAdminUser]
     serializer_class = StoreSerializer
-    http_method_names = ['get', 'post', 'put', 'patch', 'delete']
+    http_method_names = ['get']
     lookup_field = 'store'
     filter_backends = [DjangoFilterBackend]
     filterset_class = StoreFilter
-    filterset_fields = [
-        'store__title', 
-        'city', 
-        'division', 
-        'type_format',
-        'loc', 
-        'size', 
-        'is_active',
-    ]
+    # filterset_fields = [
+    #     'store__title', 
+    #     'city', 
+    #     'division', 
+    #     'type_format',
+    #     'loc', 
+    #     'size', 
+    #     'is_active',
+    # ]
     ordering_fields = '__all__'
 
     def get_queryset(self):

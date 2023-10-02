@@ -21,13 +21,11 @@ class SalesViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_class = SalesFilter
     
-    
     def get_serializer_class(self):
         if self.request.method == 'POST':
             return CreateSalesSerializer
         return SalesSerializer
 
-    
     def create(self, request, *args, **kwargs):
         """Функция создания категории."""
 
@@ -37,7 +35,6 @@ class SalesViewSet(viewsets.ModelViewSet):
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=201, headers=headers)
 
-
     def list(self, request, *args, **kwargs):
         """Переопределенный метод для GET запроса
         на получение списка объектов Sales."""
@@ -45,7 +42,6 @@ class SalesViewSet(viewsets.ModelViewSet):
         queryset = self.get_queryset()
         serializer = SalesSerializer(queryset, many=True)
         return Response(serializer.data)
-
 
     def get_sales(request):
         """Функция получения исторических данных по продажам."""
