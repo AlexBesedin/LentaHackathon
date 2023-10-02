@@ -1,7 +1,6 @@
 from djoser.serializers import UserCreateSerializer
 from rest_framework import serializers
 from users.models import CustomUser
-from django.contrib.auth import authenticate
 
 
 class MyUserCreateSerializer(UserCreateSerializer):
@@ -16,44 +15,38 @@ class MyUserCreateSerializer(UserCreateSerializer):
             'password'
             )
         extra_kwargs = {'password': {'write_only': True}}
-               
 
-class PasswordChangeSerializer(serializers.Serializer):
-    """Сериализатор изменения пароля"""
-    old_password = serializers.CharField(write_only=True, required=True)
-    new_password = serializers.CharField(write_only=True, required=True)
 
-    def validate_old_password(self, value):
-        user = self.context['request'].user
-        if not authenticate(username=user.username, password=value):
-            raise serializers.ValidationError('Старый пароль неверен.')
-        return value
+class PasswordResetRequestSerializer(serializers.Serializer):
+    """Сериализатор для обработки запроса на сброс пароля."""
+    email = serializers.EmailField()
 
-    def save(self):
-        user = self.context['request'].user
-        user.set_password(self.validated_data['new_password'])
-        user.save()
-        return user
-    
-
-class PasswordResetSerializer(serializers.Serializer):
-    """Сериализатор для сброса пароля"""
-    username = serializers.CharField(write_only=True, required=True)
-    new_password = serializers.CharField(write_only=True, required=True)
-
-    def validate_username(self, value):
+    def validate_email(self, value):
+        """Проверка существования пользователя с указанным email."""
         try:
-            user = CustomUser.objects.get(username=value)
+            user = CustomUser.objects.get(email=value)
         except CustomUser.DoesNotExist:
             raise serializers.ValidationError(
-                'Пользователь с таким именем пользователя не существует.'
+                "Пользователь с таким email не найден."
             )
         return value
 
-    def save(self):
-        username = self.validated_data['username']
-        user = CustomUser.objects.get(username=username)
-        user.set_password(self.validated_data['new_password'])
-        user.save()
-        return user
 
+class LoginWithCodeSerializer(serializers.Serializer):
+    """Сериализатор для обработки запроса на вход с помощью кода."""
+    email = serializers.EmailField()
+    code = serializers.CharField()
+
+    def validate(self, data):
+        """Проверка корректности email и кода."""
+        try:
+            user = CustomUser.objects.get(email=data["email"])
+        except CustomUser.DoesNotExist:
+            raise serializers.ValidationError(
+                "Пользователь с таким email не найден."
+                )
+        if not user.check_password(data["code"]):
+            raise serializers.ValidationError(
+                "Неверный код."
+                )
+        return data
