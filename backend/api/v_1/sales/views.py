@@ -8,7 +8,6 @@ from rest_framework.response import Response
 
 from api.v_1.sales.serializers import CreateSalesSerializer, SalesSerializer
 from sales.models import Sales, SalesRecord
-from .filters import SalesFilter
 
 
 class SalesViewSet(viewsets.ModelViewSet):
@@ -19,7 +18,6 @@ class SalesViewSet(viewsets.ModelViewSet):
     lookup_field = 'store'
     pagination_class = None
     filter_backends = [DjangoFilterBackend]
-    filterset_class = SalesFilter
     
     def get_serializer_class(self):
         if self.request.method == 'POST':
@@ -39,7 +37,7 @@ class SalesViewSet(viewsets.ModelViewSet):
         """Переопределенный метод для GET запроса
         на получение списка объектов Sales."""
 
-        queryset = self.get_queryset()
+        queryset = self.filter_queryset(self.get_queryset())
         serializer = SalesSerializer(queryset, many=True)
         return Response(serializer.data)
 

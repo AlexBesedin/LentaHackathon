@@ -1,23 +1,17 @@
-from django import forms
-from django_filters import FilterSet, ModelMultipleChoiceFilter, CharFilter, NumberFilter, BooleanFilter
-from stores.models import Store, StoreID
+from django_filters import FilterSet, AllValuesMultipleFilter, ChoiceFilter, NumberFilter
+
+from stores.models import Store
 
 
 class StoreFilter(FilterSet):
-    store = ModelMultipleChoiceFilter(
-        queryset=StoreID.objects.all(),
-        to_field_name='title',
-        field_name='store__title',
-        widget=forms.CheckboxSelectMultiple,
-        label='хэш ID',
-    )
-    city = CharFilter(field_name="city", lookup_expr='exact')
-    division = CharFilter(field_name="division", lookup_expr='exact')
-    type_format = CharFilter(field_name="type_format", lookup_expr='exact')
-    loc = CharFilter(field_name="loc", lookup_expr='exact')
+    store = AllValuesMultipleFilter(field_name='store__title', label='хэш ID')
+    city = AllValuesMultipleFilter(field_name="city")
+    division = AllValuesMultipleFilter(field_name="division")
+    type_format = AllValuesMultipleFilter(field_name="type_format")
+    loc = AllValuesMultipleFilter(field_name="loc")
     size = NumberFilter(field_name="size")
-    is_active = BooleanFilter(field_name="is_active")
-    
+    is_active = ChoiceFilter(choices=[(0, 'Неактивный'), (1, 'Активный')])
+
     
     class Meta:
         model = Store

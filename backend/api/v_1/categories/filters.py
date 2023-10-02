@@ -1,27 +1,23 @@
 import django_filters
-from django_filters import rest_framework as filters
 
-from categories.models import Category, Group, CategoryProduct, Subcategory
+from categories.models import Category
 
 
 class CategoryFilter(django_filters.FilterSet):
-    sku = filters.CharFilter(lookup_expr='icontains')
-    group = django_filters.ModelMultipleChoiceFilter(
-        queryset=Group.objects.all(), 
-        to_field_name='group', 
+    sku = django_filters.CharFilter(
+        lookup_expr='icontains'
+        )
+    group = django_filters.AllValuesMultipleFilter(
         field_name='group__group'
-    )
-    category = django_filters.ModelMultipleChoiceFilter(
-        queryset=CategoryProduct.objects.all(), 
-        to_field_name='category', 
+        )
+    category = django_filters.AllValuesMultipleFilter(
         field_name='category__category'
-    )
-    subcategory = django_filters.ModelMultipleChoiceFilter(
-        queryset=Subcategory.objects.all(), 
-        to_field_name='subcategory', 
+        )
+    subcategory = django_filters.AllValuesMultipleFilter(
         field_name='subcategory__subcategory'
-    )
-    uom = filters.NumberFilter(lookup_expr='icontains')
+        )
+    uom = django_filters.NumberFilter()
+
 
     class Meta:
         model = Category
