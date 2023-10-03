@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import StoreForecast, DailySalesForecast
+from .models import StoreForecast, DailySalesForecast, UserBookmark
 
 
 @admin.register(StoreForecast)
@@ -20,3 +20,11 @@ class DailySalesForecastAdmin(admin.ModelAdmin):
     
     # def has_add_permission(self, request):
     #     return False
+
+  
+@admin.register(UserBookmark)   
+class UserBookmarkAdmin(admin.ModelAdmin):
+    list_display = ('user', 'store_forecast', 'created_at')
+    search_fields = ('user__username', 'store_forecast__store__name')
+    list_filter = ('created_at',)
+    ordering = ('-created_at',)
