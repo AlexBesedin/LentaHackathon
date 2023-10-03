@@ -53,7 +53,6 @@ class StoreID(models.Model):
         return str(self.title)
 
 
-
 class Store(models.Model):
     """Сводная таблица магазинов продуктовой иерархии."""
     STORE_CHOICES = [(0, 'НЕТ'), (1, 'ДА')]

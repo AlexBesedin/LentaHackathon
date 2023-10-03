@@ -13,7 +13,7 @@ class DailySalesForecastSerializer(serializers.ModelSerializer):
         fields = [
             'date', 
             'target'
-            ]
+        ]
 
 
 class StoreForecastSerializer(serializers.ModelSerializer):
@@ -45,9 +45,9 @@ class StoreForecastCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = StoreForecast
         fields = [
-            'store', 
-            'forecast_date', 
-            'sku', 
+            'store',  
+            'sku',
+            'forecast_date',
             'sales_units'
         ]
 
