@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 
 from categories.models import Category
 from stores.models import Store
-from forecast.models import StoreForecast, DailySalesForecast
+from forecast.models import StoreForecast, DailySalesForecast, UserBookmark
 
 
 class DailySalesForecastSerializer(serializers.ModelSerializer):
@@ -76,3 +76,30 @@ class StoreForecastCreateSerializer(serializers.ModelSerializer):
                 **sales_unit_data
             )
         return store_forecast
+
+
+class UserBookmarkSerializer(serializers.ModelSerializer):
+    """Сериализатор избранных предсказаний"""
+    
+    class Meta:
+        model = UserBookmark
+        fields = [
+            'id', 
+            'user', 
+            'store_forecast', 
+            'created_at'
+        ]
+        
+        
+class UserBookmarkSerializer(serializers.ModelSerializer):
+    """Сериализатор отображения избранного"""
+    
+    store_forecast = StoreForecastSerializer(read_only=True)
+
+    class Meta:
+        model = UserBookmark
+        fields = [
+            'id', 
+            'store_forecast', 
+            'created_at'
+        ]
