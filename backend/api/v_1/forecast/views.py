@@ -1,17 +1,18 @@
 import pandas as pd
 
 from rest_framework.response import Response
-from rest_framework import permissions, status
-from rest_framework.generics import ListCreateAPIView
+from rest_framework import status, viewsets
 
 from forecast.models import StoreForecast
 from .serializers import StoreForecastSerializer, StoreForecastCreateSerializer
 
 
-class StoreForecastAPIView(ListCreateAPIView):
+class StoreForecastViewSet(viewsets.ModelViewSet):
     queryset = StoreForecast.objects.all()
-    permission_classes = [permissions.IsAdminUser]
+    # permission_classes = [permissions.IsAdminUser]
     serializer_class = StoreForecastSerializer
+    http_method_names = ['get', 'post']
+    lookup_field = 'store'
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
@@ -19,20 +20,20 @@ class StoreForecastAPIView(ListCreateAPIView):
         return StoreForecastSerializer
     
     
-    def write_data_to_excel(data_list, file_path):
-        """Функция записи данных прогноза в excel-файл."""
+    # def write_data_to_excel(data_list, file_path):
+    #     """Функция записи данных прогноза в excel-файл."""
 
-        df = pd.DataFrame(data_list)
-        writer = pd.ExcelWriter(file_path, engine='xlsxwriter')
-        df.to_excel(writer, index=False)
-        writer.save()
+    #     df = pd.DataFrame(data_list)
+    #     writer = pd.ExcelWriter(file_path, engine='xlsxwriter')
+    #     df.to_excel(writer, index=False)
+    #     writer.save()
 
 
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
         data_list = response.data
-        file_path = 'data.xlsx'
-        self.write_data_to_excel(data_list, file_path)
+        # file_path = 'data.xlsx'
+        # self.write_data_to_excel(data_list)
         return Response({'data': response.data})
     
     

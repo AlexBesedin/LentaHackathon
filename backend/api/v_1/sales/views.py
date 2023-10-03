@@ -13,7 +13,7 @@ from sales.models import Sales, SalesRecord
 class SalesViewSet(viewsets.ModelViewSet):
     queryset = Sales.objects.all()
     serializer_class = SalesSerializer  
-    permission_classes = [permissions.IsAdminUser]
+    # permission_classes = [permissions.IsAdminUser]
     http_method_names = ['get', 'post']
     lookup_field = 'store'
     pagination_class = None

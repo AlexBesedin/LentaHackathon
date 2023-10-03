@@ -12,7 +12,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
     """Вьюсет для товарной иерархии."""
 
     queryset = Category.objects.all()
-    permission_classes = [permissions.IsAdminUser]
+    # permission_classes = [permissions.IsAdminUser]
     serializer_class = CategorySerializer
     http_method_names = ['get']
     lookup_field = 'sku'
