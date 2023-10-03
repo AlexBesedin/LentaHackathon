@@ -28,12 +28,10 @@ def main(today=date.today()):
                 prediction = forecast(sales_data, item_info, store)
                 result.append({
                     "store": store["store"],
+                    "sku": item["sku"],
                     "forecast_date": today.strftime("%Y-%m-%d"),
-                    "forecast": {
-                        "sku": item["sku"],
-                        "sales_units": dict(zip(forecast_dates, prediction))
-                    }
-                })
+                    "sales_units": [{"date": date, "target": target} for date, target in zip(forecast_dates, prediction)]
+                    })
         response = requests.post(get_address(URL_FORECAST), json={"data": result})
         if response.status_code != 200:
             logger.error(f"Не удалось опубликовать данные прогноза для магазина {store['store']}. Status code: {response.status_code}")
