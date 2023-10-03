@@ -1,23 +1,33 @@
-from django_filters import FilterSet, AllValuesMultipleFilter, ChoiceFilter, NumberFilter
+from django_filters import (
+    FilterSet, 
+    AllValuesMultipleFilter, 
+    ChoiceFilter, 
+    NumberFilter, 
+    CharFilter,
+    BooleanFilter
+    )
 
 from stores.models import Store
 
 
 class StoreFilter(FilterSet):
-    store = AllValuesMultipleFilter(field_name='store__title', label='хэш ID')
-    city = AllValuesMultipleFilter(field_name="city")
-    division = AllValuesMultipleFilter(field_name="division")
-    type_format = AllValuesMultipleFilter(field_name="type_format")
-    loc = AllValuesMultipleFilter(field_name="loc")
-    size = NumberFilter(field_name="size")
-    is_active = ChoiceFilter(choices=[(0, 'Неактивный'), (1, 'Активный')])
+    store_exact = AllValuesMultipleFilter(field_name='store__title', label='Точное название магазина')
+    store_contains = CharFilter(field_name='store__title', lookup_expr='icontains', label='Содержит в названии магазина')
+    city_exact = AllValuesMultipleFilter(field_name="city", label='Точный город')
+    city_contains = CharFilter(field_name='city', lookup_expr='icontains', label='Содержит в названии города')
+    division = AllValuesMultipleFilter(field_name="division", label='Дивизион')
+    type_format = AllValuesMultipleFilter(field_name="type_format", label='Тип формата')
+    loc = AllValuesMultipleFilter(field_name="loc", label='Местоположение')
+    size = NumberFilter(field_name="size", label='Размер')
+    is_active = BooleanFilter(label='Статус активности')
 
-    
     class Meta:
         model = Store
         fields = [
-            'store', 
-            'city', 
+            'store_exact', 
+            'store_contains', 
+            'city_exact', 
+            'city_contains', 
             'division', 
             'type_format', 
             'loc', 
