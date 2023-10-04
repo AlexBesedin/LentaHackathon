@@ -6,7 +6,7 @@ from stores.models import Store
 
 
 class SalesFilter(FilterSet):
-    """Фильтрация данных продаж по выбранным магазинам, товарным позициям."""
+    """Фильтрация данных продаж по выбранным магазинам, товарным позициям"""
 
     store = filters.CharFilter(field_name="store__store")
     sku = filters.CharFilter(field_name="sku__sku")
@@ -29,3 +29,4 @@ class SalesFilter(FilterSet):
             'sales_rub',
             'sales_run_promo'
         ]
+
