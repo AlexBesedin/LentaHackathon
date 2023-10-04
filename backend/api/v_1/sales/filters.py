@@ -1,8 +1,13 @@
+from categories.models import Category
 from django_filters import rest_framework as filters
+from django_filters.rest_framework import FilterSet, filters
 from sales.models import Sales
+from stores.models import Store
 
 
-class SalesFilter(filters.FilterSet):
+class SalesFilter(FilterSet):
+    """Фильтрация данных продаж по выбранным магазинам, товарным позициям."""
+
     store = filters.CharFilter(field_name="store__store")
     sku = filters.CharFilter(field_name="sku__sku")
     date = filters.DateFilter(field_name="fact__date")
@@ -15,13 +20,12 @@ class SalesFilter(filters.FilterSet):
     class Meta:
         model = Sales
         fields = [
-            'store', 
-            'sku', 
-            'date', 
-            'sales_type', 
-            'sales_units', 
-            'sales_units_promo', 
-            'sales_rub', 
+            'store',
+            'sku',
+            'date',
+            'sales_type',
+            'sales_units',
+            'sales_units_promo',
+            'sales_rub',
             'sales_run_promo'
         ]
-
