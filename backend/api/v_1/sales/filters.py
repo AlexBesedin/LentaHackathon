@@ -1,5 +1,6 @@
 from dateutil.parser import parse
 from rest_framework.filters import BaseFilterBackend
+from decimal import Decimal
 
 
 class SaleFilterBackend(BaseFilterBackend):
@@ -39,31 +40,34 @@ class SaleFilterBackend(BaseFilterBackend):
         if date_param is not None:
             from dateutil.parser import parse
             date_list = [parse(date_str).date() for date_str in date_param.split(",")]
-            queryset = queryset.filter(sales_units__date__in=date_list)
+            queryset = queryset.filter(fact__date__in=date_list)
 
         # Фильтр по флаг наличия промо (sales_type)
         if sales_type_param is not None:
-            sales_type_list = sales_type_param.split(",")
-            queryset = queryset.filter(sales_type__in=sales_type_list)
+            sales_type_list = [int(x) for x in sales_type_param.split(",")]
+            queryset = queryset.filter(fact__sales_type__in=sales_type_list)
+
 
         # Фильтр по числу проданных товаров без признака промо (sales_units)
         if sales_units_param is not None:
-            sales_units_list = sales_units_param.split(",")
-            queryset = queryset.filter(sales_units__in=sales_units_list)
+            sales_units_list = [int(x) for x in sales_units_param.split(",")]
+            queryset = queryset.filter(fact__sales_units__in=sales_units_list)
 
-        # Фильтр по числу проданных товаров с признаком промо (sales_units_promo_param)
+
+        # Фильтр по числу проданных товаров с признаком промо (sales_units_promo)
         if sales_units_promo_param is not None:
-            sales_units_promo_param_list = sales_units_promo_param.split(",")
-            queryset = queryset.filter(sales_units_promo_param__in=sales_units_promo_param_list)
+            sales_units_promo_list = [int(x) for x in sales_units_promo_param.split(",")] 
+            queryset = queryset.filter(fact__sales_units_promo__in=sales_units_promo_list)
 
-        # Фильтр по продажами без признака промо в РУБ (sales_rub)
+
+        # Фильтр по продажам без признака промо в РУБ (sales_rub)
         if sales_rub_param is not None:
-            sales_rub_list = sales_rub_param.split(",")
-            queryset = queryset.filter(sales_rub__in=sales_rub_list)
+            sales_rub_list = [Decimal(x) for x in sales_rub_param.split(",")]
+            queryset = queryset.filter(fact__sales_rub__in=sales_rub_list)
 
         # Фильтр по продажам с признаком промо в РУБ; (sales_rub_promo)
         if sales_rub_promo_param is not None:
-            sales_rub_promo_param_list = sales_rub_promo_param.split(",")
-            queryset = queryset.filter(sales_rub_promo_param__in=sales_rub_promo_param_list)
+            sales_rub_promo_list = [Decimal(x) for x in sales_rub_promo_param.split(",")]
+            queryset = queryset.filter(fact__sales_rub_promo__in=sales_rub_promo_list)
 
         return queryset
