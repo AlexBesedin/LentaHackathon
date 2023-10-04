@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status, viewsets, views, generics
 from django.shortcuts import get_object_or_404
 
+from api.v_1.forecast.filters import ForecastFilterBackend
 from forecast.models import StoreForecast, UserBookmark
 from .serializers import (
     StoreForecastSerializer, 
@@ -17,7 +18,9 @@ class StoreForecastViewSet(viewsets.ModelViewSet):
     # permission_classes = [permissions.IsAdminUser]
     serializer_class = StoreForecastSerializer
     http_method_names = ['get', 'post']
-    lookup_field = 'store'
+    filter_backends = [ForecastFilterBackend]
+    lookup_field = 'store__title'
+    lookup_value_regex = '[^/]+'
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
@@ -36,7 +39,7 @@ class StoreForecastViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
-        data_list = response.data
+        # data_list = response.data
         # file_path = 'data.xlsx'
         # self.write_data_to_excel(data_list)
         return Response({'data': response.data})
