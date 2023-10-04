@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'api',
     'forecast',
     'users',
-    # 'celery',
+    'celery',
     'drf_yasg',
     'django_filters',
     'corsheaders'
@@ -199,3 +199,26 @@ EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
 # EMAIL_USE_TLS = True
 # EMAIL_HOST_USER = 'your-email@example.com'
 # EMAIL_HOST_PASSWORD = 'your-email-password'
+
+
+
+#REDIS
+
+CELERY_BROKER_URL = 'redis://redis:6379/0'
+CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
+
+
+
+#Celery
+
+from datetime import timedelta
+
+# CELERY_BEAT_SCHEDULE = {
+#     'run_main_every_10_min': {
+#         'task': 'ml.tasks.main',  # имя вашей задачи в формате 'app_name.tasks.function_name'
+#         'schedule': timedelta(minutes=10),
+#     },
+# }
+
+CELERY_TIMEZONE = 'UTC'
+

@@ -48,18 +48,16 @@ class CategoryViewSet(viewsets.ModelViewSet):
             headers=headers,
         )
 
-
     def get_categories(request):
         """Функция получения исторических данных по категориям."""
 
         categories = Category.objects.all()
-        data = []
+        data = {}
         for category in categories:
-            data.append({
-                'sku': category.sku,
+            data[category.sku] = {
                 'group': category.group.group,
                 'category': category.category,
                 'subcategory': category.subcategory.subcategory,
                 'uom': category.uom
-            })
+            }
         return JsonResponse({'data': data})

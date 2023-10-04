@@ -1,4 +1,5 @@
 version: '3.3'
+
 services:
   # db:
   #   image: postgres:13.0-alpine
@@ -6,21 +7,16 @@ services:
   #     - postgres_data:/var/lib/postgresql/data/
   #   env_file:
   #     - ./.env
-
   backend:
     build: ../backend/
     restart: always
     volumes:
       - static_value:/app/staticfiles/
-    # depends_on:
-    #   - db
-    # env_file:
-    #   - ./.env
-
-  # frontend:
-  #   image: lenta_frontend:latest
-  #   volumes:
-  #     - ../frontend/:/app/result_build/
+    depends_on:
+      - redis
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
 
   nginx:
     image: nginx:1.21.3-alpine
@@ -31,9 +27,32 @@ services:
       - ../docs/:/usr/share/nginx/html/api/docs/
       - static_value:/var/html/staticfiles/
     depends_on:
-       - backend
+      - backend
+
+  redis:
+    image: redis:latest
+
+  celery:
+    build: ../backend/
+    command: celery -A lenta_main worker -l info
+    volumes:
+      - ../backend/:/app/
+    depends_on:
+      - backend
+      - redis
+
+  flower:
+    image: mher/flower
+    ports:
+      - "5555:5555"
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+    depends_on:
+      - backend
+      - redis
 
 volumes:
   static_value:
   media_value:
   # postgres_data:
+

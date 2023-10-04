@@ -2,8 +2,9 @@ import requests
 import os
 import logging
 from datetime import date, timedelta
+from celery import shared_task
 
-from model import forecast
+from ml.model import forecast
 
 URL_CATEGORIES = "api/v1/categories"
 URL_SALES = "api/v1/sales"
@@ -63,7 +64,7 @@ def get_sales(store=None, sku=None):
         return []
     return resp.json()
 
-
+@shared_task
 def main(today=date.today()):
     forecast_dates = [today + timedelta(days=d) for d in range(1, 6)]
     forecast_dates_str = [el.strftime("%Y-%m-%d") for el in forecast_dates]
