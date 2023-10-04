@@ -29,7 +29,7 @@ class SalesRecordAdmin(admin.ModelAdmin):
         'sales_units',
         'sales_units_promo',
         'sales_rub',
-        'sales_run_promo',
+        'sales_rub_promo',
     )
     search_fields = (
         'date',
@@ -37,7 +37,7 @@ class SalesRecordAdmin(admin.ModelAdmin):
         'sales_units',
         'sales_units_promo',
         'sales_rub',
-        'sales_run_promo',
+        'sales_rub_promo',
     )
     list_filter = (
         'date',
@@ -45,6 +45,6 @@ class SalesRecordAdmin(admin.ModelAdmin):
         'sales_units',
         'sales_units_promo',
         'sales_rub',
-        'sales_run_promo',
+        'sales_rub_promo',
     )
 

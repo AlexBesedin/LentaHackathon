@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
                 ('sales_units', models.IntegerField(verbose_name='число проданных товаров без признака промо')),
                 ('sales_units_promo', models.IntegerField(verbose_name='число проданных товаров с признаком промо')),
                 ('sales_rub', models.DecimalField(decimal_places=2, max_digits=10, verbose_name='продажи без признака промо в РУБ')),
-                ('sales_run_promo', models.DecimalField(decimal_places=2, max_digits=10, verbose_name='продажи с признаком промо в РУБ;')),
+                ('sales_rub_promo', models.DecimalField(decimal_places=2, max_digits=10, verbose_name='продажи с признаком промо в РУБ;')),
             ],
             options={
                 'verbose_name': 'Запись продаж',

@@ -16,7 +16,7 @@ class SalesRecordSerialazier(serializers.ModelSerializer):
         max_digits=10,
         decimal_places=2,
     )
-    sales_run_promo = serializers.DecimalField(
+    sales_rub_promo = serializers.DecimalField(
         max_digits=10,
         decimal_places=2,
     )
@@ -28,7 +28,7 @@ class SalesRecordSerialazier(serializers.ModelSerializer):
                   'sales_units',
                   'sales_units_promo',
                   'sales_rub',
-                  'sales_run_promo',)
+                  'sales_rub_promo',)
 
 
 class SalesSerializer(serializers.ModelSerializer):

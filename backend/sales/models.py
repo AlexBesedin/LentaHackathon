@@ -22,7 +22,7 @@ class SalesRecord(models.Model):
         decimal_places=2,
         verbose_name='продажи без признака промо в РУБ'
     )
-    sales_run_promo = models.DecimalField(
+    sales_rub_promo = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         verbose_name='продажи с признаком промо в РУБ;'
@@ -33,7 +33,7 @@ class SalesRecord(models.Model):
         verbose_name_plural = 'Записи продаж'
 
     def __str__(self):
-        return f"{self.date}, {self.sales_run_promo}"
+        return f"{self.date}, {self.sales_rub_promo}"
 
 
 class Sales(models.Model):
