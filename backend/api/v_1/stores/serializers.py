@@ -12,6 +12,7 @@ class StoreIDSerializer(serializers.ModelSerializer):
 class StoreSerializer(serializers.ModelSerializer):
     # store = StoreIDSerializer()
     store = serializers.SerializerMethodField()
+    is_active = serializers.SerializerMethodField()
     
     class Meta:
         model = Store
@@ -27,3 +28,6 @@ class StoreSerializer(serializers.ModelSerializer):
         
     def get_store(self, obj):
         return str(obj.store)
+    
+    def get_is_active(self, obj):
+        return 'Активный' if obj.is_active else 'Неактивный'
