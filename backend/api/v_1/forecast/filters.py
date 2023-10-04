@@ -7,9 +7,10 @@ class ForecastFilterBackend(BaseFilterBackend):
     """
     Фильтр, который позволяет фильтровать данные прогноза на основе 
     - store (магазин)
-    - category (категория)
-    - subcategory (подкатегория)
-    - uom (единица измерения)
+    - sku (захэшированное id товара)
+    - forecast_date (Дата прогноза)
+    - date (Дата(день))
+    - target (спрос в ШТ.)
     """
 
     def filter_queryset(self, request, queryset, view):
