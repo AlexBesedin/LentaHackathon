@@ -28,7 +28,7 @@ class Command(BaseCommand):
                 sales_units = float(row[4])
                 sales_units_promo = float(row[5])
                 sales_rub = float(row[6])
-                sales_run_promo = float(row[7])
+                sales_rub_promo = float(row[7])
                 
                 sales_record, created = SalesRecord.objects.get_or_create(
                     date=date,
@@ -36,7 +36,7 @@ class Command(BaseCommand):
                     sales_units=sales_units,
                     sales_units_promo=sales_units_promo,
                     sales_rub=sales_rub,
-                    sales_run_promo=sales_run_promo,
+                    sales_rub_promo=sales_rub_promo,
                 )
                 
                 sales, created = Sales.objects.get_or_create(

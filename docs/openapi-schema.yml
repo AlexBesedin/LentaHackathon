@@ -217,9 +217,9 @@ paths:
         description: sales_rub
         required: false
         type: string
-      - name: sales_run_promo
+      - name: sales_rub_promo
         in: query
-        description: sales_run_promo
+        description: sales_rub_promo
         required: false
         type: string
       responses:
@@ -502,7 +502,7 @@ definitions:
     - sales_units
     - sales_units_promo
     - sales_rub
-    - sales_run_promo
+    - sales_rub_promo
     type: object
     properties:
       date:
@@ -522,7 +522,7 @@ definitions:
         title: Sales rub
         type: string
         format: decimal
-      sales_run_promo:
+      sales_rub_promo:
         title: Sales run promo
         type: string
         format: decimal

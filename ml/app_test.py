@@ -87,7 +87,7 @@ def main(today=date.today()):
                 "sales_units": sales.get("sales_units", 0),
                 "sales_units_promo": sales.get("sales_units_promo", 0), 
                 "sales_rub": float(sales.get("sales_rub", "0")),  
-                "sales_run_promo": float(sales.get("sales_run_promo", "0")),  
+                "sales_rub_promo": float(sales.get("sales_rub_promo", "0")),  
             }
 
             print(f'Магазин: {store}') # Принт данных из базы по магазин

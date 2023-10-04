@@ -64,7 +64,7 @@ class SalesViewSet(viewsets.ModelViewSet):
                         sales_units = record['sales_units']
                         sales_units_promo = record['sales_units_promo']
                         sales_rub = record['sales_rub']
-                        sales_run_promo = record['sales_run_promo']
+                        sales_rub_promo = record['sales_rub_promo']
                         SalesRecord.objects.create(
                             fact=sales,
                             date=date,
@@ -72,7 +72,7 @@ class SalesViewSet(viewsets.ModelViewSet):
                             sales_units=sales_units,
                             promo_units=sales_units_promo,
                             sales_rub=sales_rub,
-                            promo_rub=sales_run_promo
+                            promo_rub=sales_rub_promo
                         )
                     sales_data.append({
                         'store': store,
