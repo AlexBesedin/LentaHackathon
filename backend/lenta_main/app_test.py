@@ -2,9 +2,8 @@ import requests
 import os
 import logging
 from datetime import date, timedelta
-from celery import shared_task
 
-# from ml.model import forecast
+from model import forecast
 
 URL_CATEGORIES = "api/v1/categories"
 URL_SALES = "api/v1/sales"
@@ -64,7 +63,7 @@ def get_sales(store=None, sku=None):
         return []
     return resp.json()
 
-@shared_task
+
 def main(today=date.today()):
     forecast_dates = [today + timedelta(days=d) for d in range(1, 6)]
     forecast_dates_str = [el.strftime("%Y-%m-%d") for el in forecast_dates]
@@ -88,28 +87,27 @@ def main(today=date.today()):
                 "sales_units": sales.get("sales_units", 0),
                 "sales_units_promo": sales.get("sales_units_promo", 0), 
                 "sales_rub": float(sales.get("sales_rub", "0")),  
-                "sales_rub_promo": float(sales.get("sales_rub_promo", "0")),  
+                "sales_run_promo": float(sales.get("sales_run_promo", "0")),  
             }
 
-            print(f'Магазин: {store}') # Принт данных из базы по магазин
-            # print(f'Продажи: {sales_dict}') #Принт данных из базы по продажам
+            # print(f'Магазин: {store}') # Принт данных из базы по магазин
+            # print(f'Продажи: {sales_dict}') Принт данных из базы по продажам
             
-            print(f'Айтемы: {item_info}') #Принт данных из базы по позицияи
+            # print(f'Айтемы: {item_info}') Принт данных из базы по позицияи
+            
+            
+            prediction = forecast(sales=sales_dict, item_info=item_info, store_info=store)
 
-            
-            
-        #     prediction = forecast(sales=sales_dict, item_info=item_info, store_info=store)
-
-        #     result.append({
-        #         "store": store["store"],
-        #         "sku": item["sku"],
-        #         "forecast_date": today.strftime("%Y-%m-%d"),
-        #         "sales_units": [
-        #             {"date": date, "target": target} for date, target in zip(forecast_dates_str, prediction)
-        #             ]
-        #         })
+            result.append({
+                "store": store["store"],
+                "sku": item["sku"],
+                "forecast_date": today.strftime("%Y-%m-%d"),
+                "sales_units": [
+                    {"date": date, "target": target} for date, target in zip(forecast_dates_str, prediction)
+                    ]
+                })
         
-        # requests.post(get_address(URL_FORECAST), json={"data": result})
+        requests.post(get_address(URL_FORECAST), json={"data": result})
 
 
 if __name__ == "__main__":

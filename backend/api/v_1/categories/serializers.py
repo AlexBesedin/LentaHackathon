@@ -31,8 +31,7 @@ class CategorySerializer(serializers.ModelSerializer):
         return representation
 
 
-class CategorySerializer(serializers.ModelSerializer):
-    """Дополнительный сериализатор для фронта."""
+class UniqueCategorySerializer(serializers.ModelSerializer):
     group = serializers.CharField(source='group.group')
     category = serializers.CharField(source='category.category')
     uom = serializers.SerializerMethodField()

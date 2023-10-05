@@ -8,7 +8,7 @@ from django.http import JsonResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import mixins, permissions, viewsets
 from rest_framework.response import Response
-from api.v_1.utils.pagination import CustomPageNumberPagination
+from api.v_1.utils.pagination import CustomPagination
 from sales.models import Sales, SalesRecord
 
 
@@ -49,6 +49,14 @@ class SalesViewSet(
             return self.get_paginated_response(serializer.data)
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
+    
+    # def list(self, request, *args, **kwargs):
+    #     """Переопределенный метод для GET запроса
+    #     на получение списка объектов Sales."""
+
+    #     queryset = self.filter_queryset(self.get_queryset())
+    #     serializer = SalesSerializer(queryset, many=True)
+    #     return Response(serializer.data)
 
     # def get_sales(request):
     #     """Функция получения исторических данных по продажам."""
