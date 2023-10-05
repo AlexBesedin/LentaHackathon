@@ -1,6 +1,7 @@
 import json
 
 from api.v_1.stores.filters import StoreFilter
+from api.v_1.utils.pagination import CustomPagination
 from django.http import JsonResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
@@ -28,6 +29,7 @@ class StoreViewSet(viewsets.ReadOnlyModelViewSet):
     #     'is_active',
     # ]
     ordering_fields = '__all__'
+    pagination_class = CustomPagination
 
     def get_queryset(self):
         queryset = Store.objects.all()
@@ -41,50 +43,49 @@ class StoreViewSet(viewsets.ReadOnlyModelViewSet):
             'size', 
             'is_active',
         ]
-        
+
         filters = {}
         for field in filter_fields:
             value = self.request.query_params.get(field, None)
             if value is not None:
                 filters[field] = value
-        
+
         return queryset.filter(**filters)
 
-
     def list(self, request, *args, **kwargs):
-        """Функция отображения списко магазинов."""
+        """Функция отображения списка магазинов."""
         queryset = self.get_queryset()
-        serializer = self.get_serializer(queryset, many=True)
-        data = serializer.data
-        return Response({'data': data})
+        page = self.paginate_queryset(queryset)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
 
-    def load_stores(request):
-        """Функция загрузки исторических данных по магазинам."""
-        data = request.POST.get('data')
-        if data:
-            try:
-                json_data = json.loads(data)
-                for item in json_data['data']:
-                    store_name = item['store']
-                    city = item['city']
-                    division = item['division']
-                    type_format = item['type_format']
-                    loc = item['loc']
-                    size = item['size']
-                    is_active = bool(item['is_active'])
-                    Store.objects.create(
-                        store=store_name,
-                        city=city,
-                        division=division,
-                        type_format=type_format,
-                        loc=loc,
-                        size=size,
-                        is_active=is_active
-                    )
-                return JsonResponse({'status': 'success'})
-            except (json.JSONDecodeError, KeyError, ValueError):
-                return JsonResponse({'error': 'Неверный формат данных.'})
+    # def load_stores(request):
+    #     """Функция загрузки исторических данных по магазинам."""
+    #     data = request.POST.get('data')
+    #     if data:
+    #         try:
+    #             json_data = json.loads(data)
+    #             for item in json_data['data']:
+    #                 store_name = item['store']
+    #                 city = item['city']
+    #                 division = item['division']
+    #                 type_format = item['type_format']
+    #                 loc = item['loc']
+    #                 size = item['size']
+    #                 is_active = bool(item['is_active'])
+    #                 Store.objects.create(
+    #                     store=store_name,
+    #                     city=city,
+    #                     division=division,
+    #                     type_format=type_format,
+    #                     loc=loc,
+    #                     size=size,
+    #                     is_active=is_active
+    #                 )
+    #             return JsonResponse({'status': 'success'})
+    #         except (json.JSONDecodeError, KeyError, ValueError):
+    #             return JsonResponse({'error': 'Неверный формат данных.'})
 
-        else:
-            return JsonResponse({'error': 'Данные не были предоставлены.'})
+    #     else:
+    #         return JsonResponse({'error': 'Данные не были предоставлены.'})
