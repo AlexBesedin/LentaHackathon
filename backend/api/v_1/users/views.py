@@ -1,10 +1,11 @@
+from api.v_1.users.utils import generate_random_code
+from django.core.mail import send_mail
 from rest_framework import generics, status
 from rest_framework.response import Response
-from django.core.mail import send_mail
-
-from api.v_1.users.utils import generate_random_code
 from users.models import CustomUser
-from .serializers import PasswordResetRequestSerializer, LoginWithCodeSerializer
+
+from .serializers import (LoginWithCodeSerializer,
+                          PasswordResetRequestSerializer)
 
 
 class PasswordResetRequestView(generics.CreateAPIView):
