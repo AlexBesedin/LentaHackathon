@@ -50,6 +50,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
         )
 
 
+
     # def get_categories(request):
     #     """Функция получения исторических данных по категориям."""
 
@@ -64,3 +65,17 @@ class CategoryViewSet(viewsets.ModelViewSet):
     #             'uom': category.uom
     #         })
     #     return JsonResponse({'data': data})
+
+    def get_categories(request):
+        """Функция получения исторических данных по категориям."""
+
+        categories = Category.objects.all()
+        data = {}
+        for category in categories:
+            data[category.sku] = {
+                'group': category.group.group,
+                'category': category.category,
+                'subcategory': category.subcategory.subcategory,
+                'uom': category.uom
+            }
+        return JsonResponse({'data': data})

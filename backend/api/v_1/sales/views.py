@@ -8,10 +8,10 @@ from django.http import JsonResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import mixins, permissions, viewsets
 from rest_framework.response import Response
+from api.v_1.utils.pagination import CustomPageNumberPagination
 from sales.models import Sales, SalesRecord
 
 
-# class SalesViewSet(viewsets.ModelViewSet):
 class SalesViewSet(
     mixins.ListModelMixin,
     mixins.CreateModelMixin,
