@@ -29,3 +29,17 @@ class CategorySerializer(serializers.ModelSerializer):
         representation['category'] = instance.category.category
         representation['subcategory'] = instance.subcategory.subcategory
         return representation
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    """Дополнительный сериализатор для фронта."""
+    group = serializers.CharField(source='group.group')
+    category = serializers.CharField(source='category.category')
+    uom = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Category
+        fields = ['group', 'category', 'uom']
+
+    def get_uom(self, obj):
+        return obj.get_uom_display()

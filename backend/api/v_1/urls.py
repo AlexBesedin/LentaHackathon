@@ -1,4 +1,4 @@
-from api.v_1.categories.views import CategoryViewSet
+from api.v_1.categories.views import CategoryViewSet, UniqueSubcategoryView
 from api.v_1.sales.views import SalesViewSet
 from api.v_1.stores.views import StoreViewSet
 from django.urls import include, path
@@ -30,5 +30,7 @@ urlpatterns = [
     path('bookmarks/add/<int:forecast_id>/', AddToBookmarksView.as_view(), name='add_to_bookmarks'),
     path('bookmarks/remove/<int:bookmark_id>/', RemoveFromBookmarksView.as_view(), name='remove_from_bookmarks'),
     path('bookmarks/', UserBookmarksView.as_view(), name='user_bookmarks'),
+    path('unique-categories/', UniqueSubcategoryView.as_view(), name='unique-categories'),
+
     path('auth/', include('djoser.urls.authtoken'))
 ]
