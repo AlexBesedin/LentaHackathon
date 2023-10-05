@@ -92,9 +92,10 @@ def main(today=date.today()):
             }
 
             print(f'Магазин: {store}') # Принт данных из базы по магазин
-            # print(f'Продажи: {sales_dict}') #Принт данных из базы по продажам
+            print(f'Продажи: {sales_dict}') #Принт данных из базы по продажам
             
-            # print(f'Айтемы: {item_info}') #Принт данных из базы по позицияи
+            print(f'Айтемы: {item_info}') #Принт данных из базы по позицияи
+
             
             
         #     prediction = forecast(sales=sales_dict, item_info=item_info, store_info=store)

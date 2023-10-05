@@ -1,11 +1,14 @@
-from datetime import timedelta
+import os
+import sys
+from celery import Celery
 
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'backend'))
 
-CELERY_BEAT_SCHEDULE = {
-    'import-stores-data': {
-        'task': 'tasks.import_stores_data',
-        'schedule': timedelta(days=1),
-    },
-}
+from ml import tasks 
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'lenta_main.settings')
+
+
+app = Celery('lenta_main')
+app.config_from_object('django.conf:settings', namespace='CELERY')
+app.autodiscover_tasks()
