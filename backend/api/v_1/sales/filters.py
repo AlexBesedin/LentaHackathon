@@ -1,6 +1,9 @@
 from dateutil.parser import parse
 from rest_framework.filters import BaseFilterBackend
 from decimal import Decimal
+import django_filters
+
+from sales.models import Sales
 
 
 class SaleFilterBackend(BaseFilterBackend):
@@ -71,3 +74,20 @@ class SaleFilterBackend(BaseFilterBackend):
             queryset = queryset.filter(fact__sales_rub_promo__in=sales_rub_promo_list)
 
         return queryset
+
+
+class SalesFilter(django_filters.FilterSet):
+    """Фильтр для общих продаж"""
+    store = django_filters.CharFilter(field_name='store__store__title', lookup_expr='exact')
+    group = django_filters.CharFilter(field_name='sku__group__group', lookup_expr='exact')
+    category = django_filters.CharFilter(field_name='sku__category__category', lookup_expr='exact')
+    uom = django_filters.CharFilter(method='filter_uom')
+
+    class Meta:
+        model = Sales
+        fields = ['store', 'group', 'category', 'uom']
+
+    def filter_uom(self, queryset, name, value):
+        uom_mapping = {'шт': 1, 'кг': 17}
+        value = uom_mapping.get(value.strip().lower(), value)
+        return queryset.filter(sku__uom=value)

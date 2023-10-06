@@ -18,7 +18,7 @@ class StoreForecastViewSet(viewsets.ModelViewSet):
     filter_backends = [ForecastFilterBackend]
     lookup_field = 'store__title'
     lookup_value_regex = '[^/]+'
-    pagination_class = CustomPagination
+    # pagination_class = CustomPagination
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
