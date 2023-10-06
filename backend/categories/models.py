@@ -1,4 +1,3 @@
-from django.core.validators import MinValueValidator
 from django.db import models
 
 
@@ -30,7 +29,8 @@ class CategoryProduct(models.Model):
     group = models.ForeignKey(
         Group,
         on_delete=models.CASCADE,
-        related_name='groups'
+        related_name='groups',
+        verbose_name='захэшированная группа товара',
     )
 
     class Meta:
@@ -53,7 +53,8 @@ class Subcategory(models.Model):
     category = models.ForeignKey(
         CategoryProduct,
         on_delete=models.CASCADE,
-        related_name='categories'
+        related_name='categories',
+        verbose_name='захэшированная категория товара',
     )
 
     class Meta:
@@ -79,23 +80,25 @@ class Category(models.Model):
     group = models.ForeignKey(
         Group,
         on_delete=models.CASCADE,
-        related_name='main_groups'
+        related_name='main_groups',
+        verbose_name='захэшированная группа товара',
     )
     category = models.ForeignKey(
         CategoryProduct,
         on_delete=models.CASCADE,
-        related_name='main_categories'
+        related_name='main_categories',
+        verbose_name='захэшированная категория товара',
     )
     subcategory = models.ForeignKey(
         Subcategory,
         on_delete=models.CASCADE,
-        related_name='main_subcategories'
+        related_name='main_subcategories',
+        verbose_name='захэшированная подкатегория товара',
     )
     uom = models.IntegerField(
         choices=UOM_CHOICES,
         verbose_name='маркер, обозначающий продаётся товар на вес или в ШТ',
     )
-    
 
     class Meta:
         ordering = (

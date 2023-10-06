@@ -1,10 +1,14 @@
+import openpyxl
 import pandas as pd
 from api.v_1.forecast.filters import ForecastFilterBackend
+from api.v_1.forecast.serializers import StoreForecastSerializer
 from api.v_1.utils.pagination import CustomPagination
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from forecast.models import StoreForecast, UserBookmark
 from rest_framework import generics, status, views, viewsets
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from .serializers import (StoreForecastCreateSerializer,
                           StoreForecastSerializer, UserBookmarkSerializer)
@@ -30,7 +34,7 @@ class StoreForecastViewSet(viewsets.ModelViewSet):
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(
-            data=request.data, 
+            data=request.data,
             many=isinstance(
                 request.data, list)
             )
@@ -70,7 +74,7 @@ class AddToBookmarksView(views.APIView):
 
 class RemoveFromBookmarksView(views.APIView):
     """Удаляем предсказание из избранного"""
-    
+
     def delete(self, request, bookmark_id, *args, **kwargs):
         user = request.user
         bookmark = get_object_or_404(
@@ -91,3 +95,25 @@ class UserBookmarksView(generics.ListAPIView):
         user = self.request.user
         queryset = UserBookmark.objects.filter(user=user)
         return queryset
+
+
+class SaveForecastExcelView(APIView):
+    """Функция сохранения прогноза в excel."""  # отображает кракозябру
+
+    def get(self, request, forecast_id):
+        forecast = get_object_or_404(StoreForecast, id=forecast_id)
+        queryset = self.get_queryset()
+        forecast_data = self.list(request, queryset=queryset).data
+        df = pd.DataFrame(forecast_data)
+        file_path = 'forecast_data.xlsx'
+        df.to_excel(file_path, index=False)
+        response = HttpResponse(open(file_path, 'rb'), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename="forecast_data.xlsx"'
+        return response
+
+    def get_queryset(self):
+        return StoreForecast.objects.all()
+
+    def list(self, request, queryset):
+        serializer = StoreForecastSerializer(queryset, many=True)
+        return serializer

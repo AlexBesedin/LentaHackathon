@@ -1,12 +1,12 @@
 from api.v_1.categories.filters import CategoryFilter
 from api.v_1.utils.pagination import CustomPagination
 from categories.models import Category
-from django.http import JsonResponse
 from django.db import models
+from django.http import JsonResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import permissions, status, viewsets
-from rest_framework.response import Response
 from rest_framework.generics import ListAPIView
+from rest_framework.response import Response
 
 from .serializers import CategorySerializer, UniqueCategorySerializer
 
@@ -85,10 +85,11 @@ class CategoryViewSet(viewsets.ModelViewSet):
     
 class UniqueSubcategoryView(ListAPIView):
     """Дополнительная логика для отображения уникальных categories"""
+
     serializer_class = UniqueCategorySerializer
 
     def get_queryset(self):
-    
+
         unique_category_ids = Category.objects.values('category').annotate(min_id=models.Min('id')).values('min_id')
         return Category.objects.filter(id__in=unique_category_ids)
 
