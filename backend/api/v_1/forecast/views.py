@@ -6,7 +6,7 @@ from api.v_1.utils.pagination import CustomPagination
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from forecast.models import StoreForecast, UserBookmark
-from rest_framework import generics, status, views, viewsets
+from rest_framework import generics, status, views, viewsets, mixins
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -14,7 +14,9 @@ from .serializers import (StoreForecastCreateSerializer,
                           StoreForecastSerializer, UserBookmarkSerializer)
 
 
-class StoreForecastViewSet(viewsets.ModelViewSet):
+class StoreForecastViewSet(mixins.ListModelMixin,
+    mixins.CreateModelMixin,
+    viewsets.GenericViewSet):
     queryset = StoreForecast.objects.all()
     # permission_classes = [permissions.IsAdminUser]
     serializer_class = StoreForecastSerializer
