@@ -29,7 +29,7 @@ class StoreViewSet(viewsets.ReadOnlyModelViewSet):
     #     'is_active',
     # ]
     ordering_fields = '__all__'
-    pagination_class = CustomPagination
+    # pagination_class = CustomPagination
 
     def get_queryset(self):
         queryset = Store.objects.all()
@@ -54,11 +54,13 @@ class StoreViewSet(viewsets.ReadOnlyModelViewSet):
 
     def list(self, request, *args, **kwargs):
         """Функция отображения списка магазинов."""
-        queryset = self.get_queryset()
-        page = self.paginate_queryset(queryset)
-        serializer = self.get_serializer(page, many=True)
-        return self.get_paginated_response(serializer.data)
-
+        # queryset = self.get_queryset()
+        # page = self.paginate_queryset(queryset)
+        # serializer = self.get_serializer(page, many=True)
+        # return self.get_paginated_response(serializer.data)
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = StoreSerializer(queryset, many=True)
+        return Response(serializer.data)
 
     # def load_stores(request):
     #     """Функция загрузки исторических данных по магазинам."""
