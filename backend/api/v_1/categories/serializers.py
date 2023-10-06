@@ -32,6 +32,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class UniqueCategorySerializer(serializers.ModelSerializer):
+    """Поиск уникальный категорий для фронта"""
     group = serializers.CharField(source='group.group')
     category = serializers.CharField(source='category.category')
     uom = serializers.SerializerMethodField()

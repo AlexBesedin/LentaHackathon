@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from categories.models import Category
+from categories.models import Category, CategoryProduct, Group
 from stores.models import Store
 from sales.models import Sales, SalesRecord
 from django.shortcuts import get_object_or_404
@@ -87,3 +87,53 @@ class CreateSalesSerializer(serializers.ModelSerializer):
             **validated_data
         )
         return sales_instance
+
+
+class SalesCategorySerializer(serializers.ModelSerializer):
+    """Сериализатор категории для общего сериализатора продаж """
+    group = serializers.PrimaryKeyRelatedField(
+        queryset=Group.objects.all()
+    )
+    category = serializers.PrimaryKeyRelatedField(
+        queryset=CategoryProduct.objects.all()
+    )
+
+
+    class Meta:
+        model = Category
+        fields = (
+            'sku',
+            'group',
+            'category',
+            'uom',
+        )
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['group'] = instance.group.group
+        representation['category'] = instance.category.category
+        return representation
+    
+    
+class CombinedSalesSerializer(serializers.ModelSerializer):
+    """Общий сериализатор для продаж"""
+    store = serializers.CharField(source='store.store.title')
+    sku = serializers.CharField(source='sku.sku')
+    group = serializers.CharField(source='sku.group.group')
+    category = serializers.CharField(source='sku.category.category')
+    uom = serializers.SerializerMethodField()
+    fact = SalesRecordSerialazier()
+
+    class Meta:
+        model = Sales
+        fields = [
+            'store', 
+            'sku', 
+            'group',
+            'category', 
+            'uom', 
+            'fact',
+        ]
+
+    def get_uom(self, obj):
+        return obj.sku.get_uom_display()
