@@ -3,7 +3,7 @@ from api.v_1.forecast.views import (AddToBookmarksView,
                                     RemoveFromBookmarksView,
                                     SaveForecastExcelView,
                                     StoreForecastViewSet, UserBookmarksView)
-from api.v_1.sales.views import SalesViewSet
+from api.v_1.sales.views import SalesViewSet, SalesDetailViewSet
 from api.v_1.stores.views import StoreViewSet
 from api.v_1.users.views import LoginWithCodeView, PasswordResetRequestView
 from django.urls import include, path
@@ -17,6 +17,8 @@ v1_router.register('shops', StoreViewSet, basename='shops')
 v1_router.register('sales', SalesViewSet, basename='sales')
 v1_router.register('categories', CategoryViewSet, basename='categories')
 v1_router.register('forecast', StoreForecastViewSet, basename='forecast')
+v1_router.register('detail-sales', SalesDetailViewSet, basename='detail-sales')
+
 
 
 urlpatterns = [
