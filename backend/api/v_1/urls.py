@@ -1,17 +1,13 @@
 from api.v_1.categories.views import CategoryViewSet, UniqueSubcategoryView
+from api.v_1.forecast.views import (AddToBookmarksView,
+                                    RemoveFromBookmarksView,
+                                    SaveForecastExcelView,
+                                    StoreForecastViewSet, UserBookmarksView)
 from api.v_1.sales.views import SalesViewSet
 from api.v_1.stores.views import StoreViewSet
+from api.v_1.users.views import LoginWithCodeView, PasswordResetRequestView
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
-
-from api.v_1.forecast.views import (
-    AddToBookmarksView, 
-    StoreForecastViewSet, 
-    RemoveFromBookmarksView, 
-    UserBookmarksView
-    )
-from api.v_1.users.views import LoginWithCodeView, PasswordResetRequestView
-
 
 app_name = 'api'
 
@@ -31,6 +27,6 @@ urlpatterns = [
     path('bookmarks/remove/<int:bookmark_id>/', RemoveFromBookmarksView.as_view(), name='remove_from_bookmarks'),
     path('bookmarks/', UserBookmarksView.as_view(), name='user_bookmarks'),
     path('unique-categories/', UniqueSubcategoryView.as_view(), name='unique-categories'),
-
-    path('auth/', include('djoser.urls.authtoken'))
+    path('auth/', include('djoser.urls.authtoken')),
+    path('forecast/save-excel/<int:forecast_id>/', SaveForecastExcelView.as_view(), name='save_forecast_excel'), # отображает кракозябру
 ]
