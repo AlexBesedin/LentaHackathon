@@ -29,13 +29,14 @@ class SalesRecordSerialazier(serializers.ModelSerializer):
                   'sales_units_promo',
                   'sales_rub',
                   'sales_rub_promo',)
-
+        
 
 class SalesSerializer(serializers.ModelSerializer):
     """Сериалайзер продаж. GET запрос"""
+    
+    fact = SalesRecordSerialazier(source='facts', many=True, read_only=True)
     store = serializers.SerializerMethodField()
     sku = serializers.SerializerMethodField()
-    fact = SalesRecordSerialazier()
 
     class Meta:
         model = Sales
@@ -44,29 +45,51 @@ class SalesSerializer(serializers.ModelSerializer):
             'sku',
             'fact',
         ]
-        
+
     def get_store(self, obj):
-        return str(obj.store)
+        """
+        Метод возвращает заголовок магазина (захешированный ID магазина) 
+        связанного с объектом продажи. Если по каким-то причинам название 
+        магазина не может быть получено, метод возвращает None и печатает 
+        сообщение об ошибке.
+        """
+        try:
+            return str(obj.store.store.title)
+        except AttributeError as e:
+            print(f"Ошибка при получении магазина для объекта продаж {obj.id}: {str(e)}")
+            return None 
 
     def get_sku(self, obj):
-        return str(obj.sku)    
+        """
+        Метод возвращает SKU продукта связанного с объектом продажи.
+        Если SKU не может быть получен, метод возвращает None.
+        """
+        if hasattr(obj, 'sku') and hasattr(obj.sku, 'sku'):
+            return str(obj.sku.sku)
+        return None  
 
 
 class CreateSalesSerializer(serializers.ModelSerializer):
+    """Сериалайзер продаж. POST запрос"""
+    
     store = serializers.CharField()
     sku = serializers.CharField()
-    fact = SalesRecordSerialazier()
+    facts = SalesRecordSerialazier(many=True)
 
     class Meta:
         model = Sales
         fields = [
             'store',
             'sku',
-            'fact',
+            'facts',
         ]
         
-        
     def to_internal_value(self, data):
+        """
+        Метод преобразует входные данные API (обычно словарь) во внутреннее
+        представление, проверяя наличие необходимых полей и преобразуя внешние
+        ключи ('store' и 'sku') в соответствующие объекты модели.
+        """
         internal_value = super().to_internal_value(data)
         internal_value['store'] = get_object_or_404(
             Store, 
@@ -80,17 +103,32 @@ class CreateSalesSerializer(serializers.ModelSerializer):
 
 
     def create(self, validated_data):
-        fact_data = validated_data.pop('fact')
-        fact_instance = SalesRecord.objects.create(**fact_data)
-        sales_instance = Sales.objects.create(
-            fact=fact_instance, 
-            **validated_data
+        """ 
+        Метод создает экземпляр модели Sales, используя предоставленные
+        проверенные данные. Вначале он извлекает данные facts из проверенных данных.
+        Затем он пытается получить существующий экземпляр Sales с указанным 
+        'store' и 'sku' или создать новый. После чего создает и связывает
+        записи SalesRecord, если они предоставлены.
+        """
+        fact_data = validated_data.pop('facts', None)
+        sales_instance, created = Sales.objects.get_or_create(
+            store=validated_data['store'],
+            sku=validated_data['sku']
         )
+        if fact_data:
+            fact_instances = []
+            for fact in fact_data:
+                fact_instance = SalesRecord.objects.create(**fact)
+                fact_instances.append(fact_instance)
+            sales_instance.facts.add(*fact_instances)
+        else:
+            raise serializers.ValidationError("Фактические данные отсутствуют или недостоверны")
         return sales_instance
 
 
 class SalesCategorySerializer(serializers.ModelSerializer):
     """Сериализатор категории для общего сериализатора продаж """
+    
     group = serializers.PrimaryKeyRelatedField(
         queryset=Group.objects.all()
     )
@@ -109,6 +147,12 @@ class SalesCategorySerializer(serializers.ModelSerializer):
         )
 
     def to_representation(self, instance):
+        """ 
+        Метод преобразует экземпляр модели в словарь, который может быть
+        использован для построения ответа API. Он добавляет дополнительные поля
+        ('group' и 'category'), извлекая их из соответствующих связанных объектов,
+        чтобы обеспечить более информативный ответ API.
+        """
         representation = super().to_representation(instance)
         representation['group'] = instance.group.group
         representation['category'] = instance.category.category
@@ -117,12 +161,13 @@ class SalesCategorySerializer(serializers.ModelSerializer):
     
 class CombinedSalesSerializer(serializers.ModelSerializer):
     """Общий сериализатор для продаж"""
+    
     store = serializers.CharField(source='store.store.title')
     sku = serializers.CharField(source='sku.sku')
     group = serializers.CharField(source='sku.group.group')
     category = serializers.CharField(source='sku.category.category')
     uom = serializers.SerializerMethodField()
-    fact = SalesRecordSerialazier()
+    fact = SalesRecordSerialazier(source='facts', many=True, read_only=True)
 
     class Meta:
         model = Sales

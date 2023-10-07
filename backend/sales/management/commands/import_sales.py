@@ -22,27 +22,25 @@ class Command(BaseCommand):
                 except ObjectDoesNotExist as e:
                     self.stdout.write(self.style.ERROR(f"Объект не найден: {e}"))
                     continue
-                
                 date = datetime.strptime(row[2], '%Y-%m-%d').date()
                 sales_type = int(row[3])
                 sales_units = float(row[4])
                 sales_units_promo = float(row[5])
                 sales_rub = float(row[6])
                 sales_rub_promo = float(row[7])
-                
                 sales_record, created = SalesRecord.objects.get_or_create(
                     date=date,
                     sales_type=sales_type,
-                    sales_units=sales_units,
-                    sales_units_promo=sales_units_promo,
-                    sales_rub=sales_rub,
-                    sales_rub_promo=sales_rub_promo,
+                    defaults={
+                        'sales_units': sales_units,
+                        'sales_units_promo': sales_units_promo,
+                        'sales_rub': sales_rub,
+                        'sales_rub_promo': sales_rub_promo,
+                    }
                 )
-                
                 sales, created = Sales.objects.get_or_create(
                     store=store,
                     sku=sku,
-                    fact=sales_record,
                 )
-                
+                sales.facts.add(sales_record)
                 self.stdout.write(self.style.SUCCESS(f"Успешно добавлено/обновлено запись продаж для {store} и {sku} на {date}"))
