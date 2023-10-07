@@ -2,7 +2,7 @@ import json
 from datetime import datetime
 
 from rest_framework.generics import ListAPIView
-from api.v_1.sales.filters import SaleFilterBackend, SalesFilter
+from api.v_1.sales.filters import SaleFilterBackend, SalesDetailBackend
 from api.v_1.sales.serializers import CreateSalesSerializer, SalesSerializer, CombinedSalesSerializer
 from api.v_1.utils.pagination import CustomPagination
 # from django.http import JsonResponse
@@ -109,8 +109,9 @@ class SalesDetailViewSet(viewsets.ModelViewSet):
     queryset = Sales.objects.all()
     serializer_class = CombinedSalesSerializer
     http_method_names = ['get',]
-    filter_backends = (DjangoFilterBackend,)
-    filterset_class = SalesFilter
+    # filter_backends = (DjangoFilterBackend,)
+    # filterset_class = SalesFilter
+    filter_backends = [SalesDetailBackend]
     
     def list(self, request, *args, **kwargs):
         """Переопределенный метод для GET запроса

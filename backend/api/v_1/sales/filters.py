@@ -76,18 +76,50 @@ class SaleFilterBackend(BaseFilterBackend):
         return queryset
 
 
-class SalesFilter(django_filters.FilterSet):
+# class SalesFilter(django_filters.FilterSet):
+#     """Фильтр для общих продаж"""
+#     store = django_filters.CharFilter(field_name='store__store__title', lookup_expr='exact')
+#     group = django_filters.CharFilter(field_name='sku__group__group', lookup_expr='exact')
+#     category = django_filters.CharFilter(field_name='sku__category__category', lookup_expr='exact')
+#     uom = django_filters.CharFilter(method='filter_uom')
+
+#     class Meta:
+#         model = Sales
+#         fields = ['store', 'group', 'category', 'uom']
+
+#     def filter_uom(self, queryset, name, value):
+#         uom_mapping = {'шт': 1, 'кг': 17}
+#         value = uom_mapping.get(value.strip().lower(), value)
+#         return queryset.filter(sku__uom=value)
+
+
+class SalesDetailBackend(BaseFilterBackend):
     """Фильтр для общих продаж"""
-    store = django_filters.CharFilter(field_name='store__store__title', lookup_expr='exact')
-    group = django_filters.CharFilter(field_name='sku__group__group', lookup_expr='exact')
-    category = django_filters.CharFilter(field_name='sku__category__category', lookup_expr='exact')
-    uom = django_filters.CharFilter(method='filter_uom')
 
-    class Meta:
-        model = Sales
-        fields = ['store', 'group', 'category', 'uom']
+    def filter_queryset(self, request, queryset, view):
 
-    def filter_uom(self, queryset, name, value):
-        uom_mapping = {'шт': 1, 'кг': 17}
-        value = uom_mapping.get(value.strip().lower(), value)
-        return queryset.filter(sku__uom=value)
+        store_param = request.query_params.get('store')
+        category_param = request.query_params.get('category')
+        group_param = request.query_params.get('group')
+        uom_param = request.query_params.get('uom')
+
+        if store_param is not None:
+            store_list = store_param.split(",")
+            queryset = queryset.filter(store__store__title__in=store_list)
+        
+        if category_param is not None:
+            category_list = category_param.split(",")
+            queryset = queryset.filter(sku__category__category__in=category_list)
+            
+        if group_param is not None:
+            group_list = group_param.split(",")
+            queryset = queryset.filter(sku__group__group__in=group_list)
+
+        if uom_param is not None:
+            uom_mapping = {'шт': 1, 'кг': 17}
+            uom_param = uom_mapping.get(uom_param.strip().lower(), uom_param)
+            queryset = queryset.filter(sku__uom=uom_param)    
+        
+        return queryset
+    
+    
