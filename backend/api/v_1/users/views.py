@@ -1,7 +1,8 @@
-from api.v_1.users.utils import generate_random_code
 from django.core.mail import send_mail
 from rest_framework import generics, status
 from rest_framework.response import Response
+
+from api.v_1.users.utils import generate_random_code
 from users.models import CustomUser
 
 from .serializers import (LoginWithCodeSerializer,
@@ -10,6 +11,7 @@ from .serializers import (LoginWithCodeSerializer,
 
 class PasswordResetRequestView(generics.CreateAPIView):
     """Представление для обработки запроса на сброс пароля."""
+
     serializer_class = PasswordResetRequestSerializer
 
     def create(self, request, *args, **kwargs):
@@ -41,15 +43,19 @@ class PasswordResetRequestView(generics.CreateAPIView):
         )
 
         return Response(
-            {"detail": "Код отправлен на ваш email."}, status=status.HTTP_200_OK)
+            {"detail": "Код отправлен на ваш email."},
+            status=status.HTTP_200_OK)
 
 
 class LoginWithCodeView(generics.CreateAPIView):
     """Представление для обработки запроса на вход с использованием кода."""
+
     serializer_class = LoginWithCodeSerializer
 
     def create(self, request, *args, **kwargs):
         """Обработка POST запроса для входа с использованием кода."""
+
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        return Response({"detail": "Успешный вход."}, status=status.HTTP_200_OK)
+        return Response({"detail": "Успешный вход."},
+                        status=status.HTTP_200_OK)

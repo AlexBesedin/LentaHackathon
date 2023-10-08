@@ -4,6 +4,8 @@ from categories.models import Category
 
 
 class CategoryFilter(django_filters.FilterSet):
+    """Фильтр для категорий."""
+
     sku = django_filters.CharFilter(
         lookup_expr='icontains'
         )
@@ -18,12 +20,11 @@ class CategoryFilter(django_filters.FilterSet):
         )
     uom = django_filters.NumberFilter()
 
-
     class Meta:
         model = Category
         fields = [
-            'sku', 
-            'group__group', 
-            'category__category', 
-            'subcategory__subcategory'
+            'sku',
+            'group__group',
+            'category__category',
+            'subcategory__subcategory',
         ]

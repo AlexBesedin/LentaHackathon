@@ -1,6 +1,7 @@
-from categories.models import Category
 from django.contrib.auth import get_user_model
 from django.db import models
+
+from categories.models import Category
 from stores.models import Store
 
 
@@ -40,20 +41,20 @@ class SalesRecord(models.Model):
 class Sales(models.Model):
     """Модель данных продаж по магазинам."""
     store = models.ForeignKey(
-        Store, 
-        on_delete=models.CASCADE, 
-        related_name='store_sales', 
+        Store,
+        on_delete=models.CASCADE,
+        related_name='store_sales',
         verbose_name='Магазин'
         )
     sku = models.ForeignKey(
-        Category, 
-        on_delete=models.CASCADE, 
-        related_name='sku_sales', 
+        Category,
+        on_delete=models.CASCADE,
+        related_name='sku_sales',
         verbose_name='Товар'
         )
     facts = models.ManyToManyField(
-        SalesRecord, 
-        related_name='sales_records', 
+        SalesRecord,
+        related_name='sales_records',
         verbose_name='Записи продаж'
         )
 
@@ -70,7 +71,7 @@ class UserSalesBookmark(models.Model):
 
     user = models.ForeignKey(
         get_user_model(),
-        on_delete=models.CASCADE, 
+        on_delete=models.CASCADE,
         related_name='sales_bookmarks',
         verbose_name='Пользователь',
         )

@@ -1,9 +1,9 @@
+from decimal import Decimal
+
 from dateutil.parser import parse
 from rest_framework.filters import BaseFilterBackend
-from decimal import Decimal
-import django_filters
 
-from sales.models import Sales
+# from sales.models import Sales
 
 
 class SaleFilterBackend(BaseFilterBackend):
@@ -34,7 +34,7 @@ class SaleFilterBackend(BaseFilterBackend):
             store_list = store_param.split(",")
             queryset = queryset.filter(store__store__title__in=store_list)
 
-        #Фильтр хэша товара предсказания
+        # Фильтр хэша товара предсказания
         if sku_param is not None:
             sku_list = sku_param.split(",")
             queryset = queryset.filter(sku__sku__in=sku_list)
@@ -42,7 +42,8 @@ class SaleFilterBackend(BaseFilterBackend):
         # Фильтр по дате
         if date_param is not None:
             from dateutil.parser import parse
-            date_list = [parse(date_str).date() for date_str in date_param.split(",")]
+            date_list = [parse(date_str).date() for date_str
+                         in date_param.split(",")]
             queryset = queryset.filter(fact__date__in=date_list)
 
         # Фильтр по флаг наличия промо (sales_type)
@@ -50,18 +51,18 @@ class SaleFilterBackend(BaseFilterBackend):
             sales_type_list = [int(x) for x in sales_type_param.split(",")]
             queryset = queryset.filter(fact__sales_type__in=sales_type_list)
 
-
         # Фильтр по числу проданных товаров без признака промо (sales_units)
         if sales_units_param is not None:
             sales_units_list = [int(x) for x in sales_units_param.split(",")]
             queryset = queryset.filter(fact__sales_units__in=sales_units_list)
 
-
-        # Фильтр по числу проданных товаров с признаком промо (sales_units_promo)
+        # Фильтр по числу проданных товаров с признаком промо
+        # (sales_units_promo)
         if sales_units_promo_param is not None:
-            sales_units_promo_list = [int(x) for x in sales_units_promo_param.split(",")] 
-            queryset = queryset.filter(fact__sales_units_promo__in=sales_units_promo_list)
-
+            sales_units_promo_list = [int(x) for x in
+                                      sales_units_promo_param.split(",")]
+            queryset = queryset.filter(
+                fact__sales_units_promo__in=sales_units_promo_list)
 
         # Фильтр по продажам без признака промо в РУБ (sales_rub)
         if sales_rub_param is not None:
@@ -70,8 +71,10 @@ class SaleFilterBackend(BaseFilterBackend):
 
         # Фильтр по продажам с признаком промо в РУБ; (sales_rub_promo)
         if sales_rub_promo_param is not None:
-            sales_rub_promo_list = [Decimal(x) for x in sales_rub_promo_param.split(",")]
-            queryset = queryset.filter(fact__sales_rub_promo__in=sales_rub_promo_list)
+            sales_rub_promo_list = [Decimal(x) for x in
+                                    sales_rub_promo_param.split(",")]
+            queryset = queryset.filter(
+                fact__sales_rub_promo__in=sales_rub_promo_list)
 
         return queryset
 
@@ -106,11 +109,12 @@ class SalesDetailBackend(BaseFilterBackend):
         if store_param is not None:
             store_list = store_param.split(",")
             queryset = queryset.filter(store__store__title__in=store_list)
-        
+
         if category_param is not None:
             category_list = category_param.split(",")
-            queryset = queryset.filter(sku__category__category__in=category_list)
-            
+            queryset = queryset.filter(
+                sku__category__category__in=category_list)
+
         if group_param is not None:
             group_list = group_param.split(",")
             queryset = queryset.filter(sku__group__group__in=group_list)
@@ -118,8 +122,6 @@ class SalesDetailBackend(BaseFilterBackend):
         if uom_param is not None:
             uom_mapping = {'шт': 1, 'кг': 17}
             uom_param = uom_mapping.get(uom_param.strip().lower(), uom_param)
-            queryset = queryset.filter(sku__uom=uom_param)    
-        
+            queryset = queryset.filter(sku__uom=uom_param)
+
         return queryset
-    
-    

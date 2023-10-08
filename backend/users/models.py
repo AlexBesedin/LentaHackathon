@@ -1,6 +1,6 @@
-from django.db import models
-from django.core import validators
 from django.contrib.auth.models import AbstractUser
+from django.core import validators
+from django.db import models
 
 
 class Roles(models.TextChoices):
@@ -12,29 +12,29 @@ class CustomUser(AbstractUser):
     """ Кастомная модель пользователя. """
     username = models.CharField(
         max_length=150,
-        verbose_name = 'Логин', 
+        verbose_name='Логин',
         unique=True,
         validators=[validators.RegexValidator(regex='^[\w.@+-]+$')]
         )
     email = models.EmailField(
-        max_length=254, 
-        verbose_name = 'Email',
+        max_length=254,
+        verbose_name='Email',
         unique=True
         )
     first_name = models.CharField(
         max_length=150,
-        verbose_name = 'Имя'
+        verbose_name='Имя'
         )
     last_name = models.CharField(
         max_length=150,
-        verbose_name = 'Фамилия'
+        verbose_name='Фамилия'
         )
     role = models.CharField(
         max_length=20,
         choices=Roles.choices,
         default=Roles.ADMIN,
     )
-    
+
     def __str__(self):
         return f'{self.username}'
 

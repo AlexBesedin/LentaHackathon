@@ -1,23 +1,25 @@
-from rest_framework import serializers
 from django.core.exceptions import ValidationError
+from rest_framework import serializers
 
 from categories.models import Category
+from forecast.models import DailySalesForecast, StoreForecast, UserBookmark
 from stores.models import Store
-from forecast.models import StoreForecast, DailySalesForecast, UserBookmark
 
 
 class DailySalesForecastSerializer(serializers.ModelSerializer):
-    
+    """Сериализотор прогноза ежедневных продаж."""
+
     class Meta:
         model = DailySalesForecast
         fields = [
-            'date', 
-            'target'
+            'date',
+            'target',
         ]
 
 
 class StoreForecastSerializer(serializers.ModelSerializer):
     """Сериализатор для GET запроса"""
+
     store = serializers.CharField(source='store.store')
     sku = serializers.CharField(source='sku.sku')
     forecast = serializers.SerializerMethodField()
@@ -25,19 +27,22 @@ class StoreForecastSerializer(serializers.ModelSerializer):
     class Meta:
         model = StoreForecast
         fields = [
-            'store', 
-            'sku', 
-            'forecast_date', 
-            'forecast'
+            'store',
+            'sku',
+            'forecast_date',
+            'forecast',
         ]
 
     def get_forecast(self, obj):
-        forecasts = DailySalesForecast.objects.filter(forecast_sku_id=obj).order_by('date')
-        return {forecast.date.strftime('%Y-%m-%d'): forecast.target for forecast in forecasts}
-    
+        forecasts = DailySalesForecast.objects.filter(
+            forecast_sku_id=obj).order_by('date')
+        return {forecast.date.strftime('%Y-%m-%d'): forecast.target for
+                forecast in forecasts}
+
 
 class StoreForecastCreateSerializer(serializers.ModelSerializer):
     """Сериализатор для POST запроса"""
+
     store = serializers.CharField()
     sku = serializers.CharField()
     sales_units = DailySalesForecastSerializer(many=True)
@@ -45,16 +50,17 @@ class StoreForecastCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = StoreForecast
         fields = [
-            'store',  
+            'store',
             'sku',
             'forecast_date',
-            'sales_units'
+            'sales_units',
         ]
 
     def to_internal_value(self, data):
         internal_value = super().to_internal_value(data)
         try:
-            internal_value['store'] = Store.objects.get(store__title=data['store'])
+            internal_value['store'] = Store.objects.get(
+                store__title=data['store'])
         except Store.DoesNotExist:
             raise ValidationError(
                 {"store": "Магазин с таким названием не существует."}
@@ -80,26 +86,26 @@ class StoreForecastCreateSerializer(serializers.ModelSerializer):
 
 class UserBookmarkSerializer(serializers.ModelSerializer):
     """Сериализатор избранных предсказаний"""
-    
+
     class Meta:
         model = UserBookmark
         fields = [
-            'id', 
-            'user', 
-            'store_forecast', 
-            'created_at'
+            'id',
+            'user',
+            'store_forecast',
+            'created_at',
         ]
-        
-        
+
+
 class UserBookmarkSerializer(serializers.ModelSerializer):
     """Сериализатор отображения избранного"""
-    
+
     store_forecast = StoreForecastSerializer(read_only=True)
 
     class Meta:
         model = UserBookmark
         fields = [
-            'id', 
-            'store_forecast', 
-            'created_at'
+            'id',
+            'store_forecast',
+            'created_at',
         ]

@@ -1,7 +1,8 @@
 import requests
 
+from ml.constants import (API_HOST, API_PORT, URL_CATEGORIES, URL_SALES,
+                          URL_STORES)
 from ml.logger_config import _logger
-from ml.constants import API_PORT, API_HOST, URL_STORES, URL_CATEGORIES, URL_SALES
 
 
 def get_address(resource):

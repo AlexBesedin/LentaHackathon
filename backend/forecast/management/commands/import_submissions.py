@@ -1,9 +1,10 @@
 import csv
 from datetime import datetime
 
-from categories.models import Category
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.management.base import BaseCommand
+
+from categories.models import Category
 from forecast.models import DailySalesForecast, StoreForecast
 from stores.models import Store, StoreID
 

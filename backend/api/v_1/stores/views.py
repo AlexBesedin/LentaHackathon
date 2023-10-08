@@ -1,17 +1,18 @@
-import json
-
-from api.v_1.stores.filters import StoreFilter
-from api.v_1.utils.pagination import CustomPagination
-from django.http import JsonResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.response import Response
+
+from api.v_1.stores.filters import StoreFilter
 from stores.models import Store
 
 from .serializers import StoreSerializer
 
+# from api.v_1.utils.pagination import CustomPagination
+
 
 class StoreViewSet(viewsets.ReadOnlyModelViewSet):
+    """Вьюсет магазинов."""
+
     queryset = Store.objects.all()
     # permission_classes = [permissions.IsAdminUser]
     serializer_class = StoreSerializer
@@ -20,12 +21,12 @@ class StoreViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_class = StoreFilter
     # filterset_fields = [
-    #     'store__title', 
-    #     'city', 
-    #     'division', 
+    #     'store__title',
+    #     'city',
+    #     'division',
     #     'type_format',
-    #     'loc', 
-    #     'size', 
+    #     'loc',
+    #     'size',
     #     'is_active',
     # ]
     ordering_fields = '__all__'
@@ -33,14 +34,14 @@ class StoreViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         queryset = Store.objects.all()
-        
+
         filter_fields = [
-            'store__title', 
-            'city', 
-            'division', 
+            'store__title',
+            'city',
+            'division',
             'type_format',
-            'loc', 
-            'size', 
+            'loc',
+            'size',
             'is_active',
         ]
 
@@ -54,6 +55,7 @@ class StoreViewSet(viewsets.ReadOnlyModelViewSet):
 
     def list(self, request, *args, **kwargs):
         """Функция отображения списка магазинов."""
+
         # queryset = self.get_queryset()
         # page = self.paginate_queryset(queryset)
         # serializer = self.get_serializer(page, many=True)
@@ -61,33 +63,3 @@ class StoreViewSet(viewsets.ReadOnlyModelViewSet):
         queryset = self.filter_queryset(self.get_queryset())
         serializer = StoreSerializer(queryset, many=True)
         return Response(serializer.data)
-
-    # def load_stores(request):
-    #     """Функция загрузки исторических данных по магазинам."""
-    #     data = request.POST.get('data')
-    #     if data:
-    #         try:
-    #             json_data = json.loads(data)
-    #             for item in json_data['data']:
-    #                 store_name = item['store']
-    #                 city = item['city']
-    #                 division = item['division']
-    #                 type_format = item['type_format']
-    #                 loc = item['loc']
-    #                 size = item['size']
-    #                 is_active = bool(item['is_active'])
-    #                 Store.objects.create(
-    #                     store=store_name,
-    #                     city=city,
-    #                     division=division,
-    #                     type_format=type_format,
-    #                     loc=loc,
-    #                     size=size,
-    #                     is_active=is_active
-    #                 )
-    #             return JsonResponse({'status': 'success'})
-    #         except (json.JSONDecodeError, KeyError, ValueError):
-    #             return JsonResponse({'error': 'Неверный формат данных.'})
-
-    #     else:
-    #         return JsonResponse({'error': 'Данные не были предоставлены.'})
