@@ -1,10 +1,8 @@
-from datetime import date, timedelta
-
-import joblib
 import pandas as pd
-from joblib import Parallel, delayed
+import joblib
+from datetime import date, timedelta
 from prophet import Prophet
-
+from joblib import Parallel, delayed
 
 def forecast(sales: dict, item_info: dict, store_info: dict) -> list:
     """
@@ -147,7 +145,7 @@ def forecast(sales: dict, item_info: dict, store_info: dict) -> list:
             rol14 = units.shift().rolling(14).mean()
             row['rol14'] = rol14.iloc[-1]
         except:
-            row['rol14'] = 0
+            pass
 
         try:
             row['pr_sales_min'] = units.shift().rolling(14).min()
@@ -182,7 +180,7 @@ def forecast(sales: dict, item_info: dict, store_info: dict) -> list:
 
         pred = model_units.predict(row)
 
-
+        units[units.index[-1] + 1] = pred
         result.append(pred)
 
 
@@ -194,3 +192,5 @@ def forecast(sales: dict, item_info: dict, store_info: dict) -> list:
     forecast_dates['price_clasters'] = forecast_dates['price_clasters'].astype('int')
 
     return result
+
+
