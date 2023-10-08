@@ -23,11 +23,13 @@ class CustomUserAdmin(UserAdmin):
     fieldsets = (
         (None, {"fields": ("username", "password")}),
         (_("Personal info"), {"fields": ("first_name", "last_name", "email")}),
-        (_("Permissions"), {"fields": ("is_active", "is_staff", "is_superuser", "groups", "user_permissions")}),
+        (_("Permissions"), {"fields": ("is_active", "is_staff", "is_superuser",
+                                       "groups", "user_permissions")}),
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
         (_("Roles"), {"fields": ("role",)}),
     )
     add_fieldsets = (
-        (None, {"classes": ("wide",), "fields": ("username", "email", "password1", "password2", "role")}),
+        (None, {"classes": ("wide",), "fields": (
+            "username", "email", "password1", "password2", "role")}),
     )
     list_filter = ("role",) + UserAdmin.list_filter

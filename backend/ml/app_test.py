@@ -1,8 +1,8 @@
-import requests
-import os
 import logging
+import os
 from datetime import date, timedelta
 
+import requests
 from model import forecast
 
 URL_CATEGORIES = "api/v1/categories"

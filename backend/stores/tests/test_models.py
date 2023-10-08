@@ -1,5 +1,6 @@
 from django.test import TestCase
-from stores.models import StoreID, Store
+
+from stores.models import Store, StoreID
 
 
 class StoreIDModelTest(TestCase):
@@ -9,10 +10,10 @@ class StoreIDModelTest(TestCase):
         cls.store_id = StoreID.objects.create(
             title='Пример хэш значение магазина',
         )
-        
+
     def setUp(self):
         self.store_id = StoreIDModelTest.store_id
-        
+
     def test_str_returns_title(self):
         """Проверяем, что у моделей корректно работает __str__."""
         self.assertEqual(str(self.store_id), 'Пример хэш значение магазина')
@@ -28,6 +29,7 @@ class StoreIDModelTest(TestCase):
                     self.store_id._meta.get_field(field).verbose_name, expected_value
                 )
 
+
 class StoreModelTest(TestCase):
     @classmethod
     def setUpClass(cls):
@@ -42,16 +44,17 @@ class StoreModelTest(TestCase):
             size=3,
             is_active=1,
         )
-        
+
     def setUp(self):
         self.store = StoreModelTest.store
-        
+
     def test_str_returns_store_title(self):
         """Проверяем, что у моделей корректно работает __str__."""
         self.assertEqual(str(self.store), 'захэшированное id магазина')
 
     def test_verbose_name(self):
         """verbose_name в полях совпадает с ожидаемым."""
+
         field_verboses = {
             "store": "захэшированное id магазина",
             "city": "захэшированное id города",
@@ -64,5 +67,6 @@ class StoreModelTest(TestCase):
         for field, expected_value in field_verboses.items():
             with self.subTest(field=field):
                 self.assertEqual(
-                    self.store._meta.get_field(field).verbose_name, expected_value
+                    self.store._meta.get_field(field).verbose_name,
+                    expected_value
                 )

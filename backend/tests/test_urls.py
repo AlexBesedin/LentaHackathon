@@ -1,10 +1,11 @@
+from django.test import TestCase
+from django.urls import resolve, reverse
+
 from api.v_1.categories.views import CategoryViewSet, UniqueSubcategoryView
 from api.v_1.forecast.views import StoreForecastViewSet, UserBookmarksView
 from api.v_1.sales.views import SalesViewSet
 from api.v_1.stores.views import StoreViewSet
 from api.v_1.users.views import LoginWithCodeView, PasswordResetRequestView
-from django.test import TestCase
-from django.urls import resolve, reverse
 
 
 class UrlsTest(TestCase):
@@ -36,7 +37,8 @@ class UrlsTest(TestCase):
         """Тестируем путь для переустановки пароля для регистрации."""
 
         url = reverse('api:password-reset-request')
-        self.assertEqual(resolve(url).func.view_class, PasswordResetRequestView)
+        self.assertEqual(resolve(url).func.view_class,
+                         PasswordResetRequestView)
 
     def test_login_with_code_url(self):
         """Тестируем путь для логина в систему с помощью кода."""

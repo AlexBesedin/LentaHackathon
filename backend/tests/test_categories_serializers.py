@@ -1,13 +1,17 @@
 from django.test import TestCase
+
+from api.v_1.categories.serializers import (CategorySerializer,
+                                            UniqueCategorySerializer)
 from categories.models import Category, CategoryProduct, Group, Subcategory
-from api.v_1.categories.serializers import CategorySerializer, UniqueCategorySerializer
 
 
 class CategorySerializerTestCase(TestCase):
     def setUp(self):
         self.group = Group.objects.create(group='Test Group')
-        self.category = CategoryProduct.objects.create(category='Test Category')
-        self.subcategory = Subcategory.objects.create(subcategory='Test Subcategory')
+        self.category = CategoryProduct.objects.create(
+            category='Test Category')
+        self.subcategory = Subcategory.objects.create(
+            subcategory='Test Subcategory')
         self.category_instance = Category.objects.create(
             sku='test_sku',
             group=self.group,
@@ -26,7 +30,7 @@ class CategorySerializerTestCase(TestCase):
             'group': 'Test Group',
             'category': 'Test Category',
             'subcategory': 'Test Subcategory',
-            'uom': 'test_uom'
+            'uom': 'test_uom',
         }
         self.assertEqual(serialized_data, expected_data)
 

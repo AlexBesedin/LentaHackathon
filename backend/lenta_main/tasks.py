@@ -1,11 +1,12 @@
-import requests
 from datetime import date, timedelta
+
+import requests
 from celery import shared_task
 
+from ml.constants import URL_FORECAST
+from ml.data_services import get_address, get_categories, get_sales, get_stores
 from ml.logger_config import _logger
 from ml.model import forecast
-from ml.constants import URL_FORECAST
-from ml.data_services import get_address, get_stores, get_categories, get_sales
 
 
 @shared_task

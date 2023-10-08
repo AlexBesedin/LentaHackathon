@@ -1,11 +1,6 @@
 import json
 from datetime import datetime
 
-from api.v_1.sales.filters import SaleFilterBackend, SalesDetailBackend
-from api.v_1.sales.serializers import (CombinedSalesSerializer,
-                                       CreateSalesSerializer, SalesSerializer,
-                                       UserSalesBookmarkSerializer)
-from api.v_1.utils.pagination import CustomPagination
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 # from django.http import JsonResponse
@@ -14,6 +9,12 @@ from rest_framework import (generics, mixins, permissions, status, views,
                             viewsets)
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
+
+from api.v_1.sales.filters import SaleFilterBackend, SalesDetailBackend
+from api.v_1.sales.serializers import (CombinedSalesSerializer,
+                                       CreateSalesSerializer, SalesSerializer,
+                                       UserSalesBookmarkSerializer)
+from api.v_1.utils.pagination import CustomPagination
 from sales.models import Sales, SalesRecord, UserSalesBookmark
 
 
@@ -54,7 +55,7 @@ class SalesViewSet(
     #         return self.get_paginated_response(serializer.data)
     #     serializer = self.get_serializer(page, many=True)
     #     return self.get_paginated_response(serializer.data)
-    
+
     def list(self, request, *args, **kwargs):
         """Переопределенный метод для GET запроса
         на получение списка объектов Sales."""
@@ -63,60 +64,17 @@ class SalesViewSet(
         serializer = SalesSerializer(queryset, many=True)
         return Response(serializer.data)
 
-    # def get_sales(request):
-    #     """Функция получения исторических данных по продажам."""
-
-    #     data = request.POST.get('data')
-    #     if data:
-    #         try:
-    #             json_data = json.loads(data)
-    #             sales_data = []
-    #             for item in json_data['data']:
-    #                 store = item['store']
-    #                 sku = item['sku']
-    #                 sales_records = item['fact']
-    #                 sales, _ = Sales.objects.get_or_create(
-    #                     store=store,
-    #                     sku=sku,
-    #                 )
-    #                 for record in sales_records:
-    #                     date_str = record['date']
-    #                     date = datetime.strptime(date_str, '%Y-%m-%d').date()
-    #                     sales_type = record['sales_type']
-    #                     sales_units = record['sales_units']
-    #                     sales_units_promo = record['sales_units_promo']
-    #                     sales_rub = record['sales_rub']
-    #                     sales_rub_promo = record['sales_rub_promo']
-    #                     SalesRecord.objects.create(
-    #                         fact=sales,
-    #                         date=date,
-    #                         sales_type=sales_type,
-    #                         sales_units=sales_units,
-    #                         promo_units=sales_units_promo,
-    #                         sales_rub=sales_rub,
-    #                         promo_rub=sales_rub_promo
-    #                     )
-    #                 sales_data.append({
-    #                     'store': store,
-    #                     'sku': sku,
-    #                     'fact': sales_records,
-    #                 })
-    #             return JsonResponse({'data': sales_data})      
-    #         except (json.JSONDecodeError, KeyError, ValueError):
-    #             return JsonResponse({'error': 'Неверный формат данных.'})
-    #     else:
-    #         return JsonResponse({'error': 'Данные не предоставлены.'})
-
 
 class SalesDetailViewSet(viewsets.ModelViewSet):
     """Детали продажи detail-sales"""
+
     queryset = Sales.objects.all()
     serializer_class = CombinedSalesSerializer
-    http_method_names = ['get',]
+    http_method_names = ['get', ]
     # filter_backends = (DjangoFilterBackend,)
     # filterset_class = SalesFilter
     filter_backends = [SalesDetailBackend]
-    
+
     def list(self, request, *args, **kwargs):
         """Переопределенный метод для GET запроса
         на получение списка объектов Sales."""
@@ -133,22 +91,23 @@ class AddToSalesBookmarksView(views.APIView):
         user = request.user
         sales = get_object_or_404(
             Sales,
-            id=sales_id
+            id=sales_id,
         )
         if UserSalesBookmark.objects.filter(
             user=user,
-            sales=sales
+            sales=sales,
         ).exists():
             return Response(
-                {'detail': 'Данные по продажам уже добавлены в избранное.'}, status=status.HTTP_400_BAD_REQUEST)
+                {'detail': 'Данные по продажам уже добавлены в избранное.'},
+                status=status.HTTP_400_BAD_REQUEST)
         salesbookmark = UserSalesBookmark.objects.create(
             user=user,
-            sales=sales
+            sales=sales,
         )
         serializer = UserSalesBookmarkSerializer(salesbookmark)
         return Response(
             serializer.data,
-            status=status.HTTP_201_CREATED
+            status=status.HTTP_201_CREATED,
         )
 
 
@@ -164,7 +123,8 @@ class RemoveFromSalesBookmarksView(views.APIView):
         )
         salesbookmark.delete()
         return Response(
-            {'detail': 'Удалено из закладок.'}, status=status.HTTP_204_NO_CONTENT)
+            {'detail': 'Удалено из закладок.'},
+            status=status.HTTP_204_NO_CONTENT)
 
 
 class UserSalesBookmarksView(generics.ListAPIView):

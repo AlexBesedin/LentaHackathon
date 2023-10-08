@@ -1,14 +1,17 @@
+from django.test import TestCase
+
 from api.v_1.categories.serializers import (CategorySerializer,
                                             UniqueCategorySerializer)
 from categories.models import Category, CategoryProduct, Group, Subcategory
-from django.test import TestCase
 
 
 class CategorySerializerTestCase(TestCase):
     def setUp(self):
         self.group = Group.objects.create(group='Test Group')
-        self.category = CategoryProduct.objects.create(category='Test Category')
-        self.subcategory = Subcategory.objects.create(subcategory='Test Subcategory')
+        self.category = CategoryProduct.objects.create(
+            category='Test Category')
+        self.subcategory = Subcategory.objects.create(
+            subcategory='Test Subcategory')
         self.category_instance = Category.objects.create(
             sku='test_sku',
             group=self.group,
@@ -18,7 +21,7 @@ class CategorySerializerTestCase(TestCase):
         )
 
     def test_to_representation(self):
-        """Проверяем формат правильность формата данных."""
+        """Проверяем правильность формата данных."""
 
         serializer = CategorySerializer(instance=self.category_instance)
         serialized_data = serializer.data

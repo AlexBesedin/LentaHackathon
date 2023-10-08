@@ -1,8 +1,10 @@
-import pandas as pd
-import joblib
 from datetime import date, timedelta
-from prophet import Prophet
+
+import joblib
+import pandas as pd
 from joblib import Parallel, delayed
+from prophet import Prophet
+
 
 def forecast(sales: dict, item_info: dict, store_info: dict) -> list:
     """

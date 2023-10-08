@@ -1,8 +1,11 @@
-from categories.models import Category, CategoryProduct, Group, Subcategory
 from rest_framework import serializers
+
+from categories.models import Category, CategoryProduct, Group, Subcategory
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    """Сериализатор для категорий."""
+
     group = serializers.PrimaryKeyRelatedField(
         queryset=Group.objects.all()
     )
@@ -33,6 +36,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class UniqueCategorySerializer(serializers.ModelSerializer):
     """Поиск уникальный категорий для фронта"""
+
     group = serializers.CharField(source='group.group')
     category = serializers.CharField(source='category.category')
     uom = serializers.SerializerMethodField()
