@@ -3,7 +3,10 @@ from api.v_1.forecast.views import (AddToBookmarksView,
                                     RemoveFromBookmarksView,
                                     SaveForecastExcelView,
                                     StoreForecastViewSet, UserBookmarksView)
-from api.v_1.sales.views import SalesViewSet, SalesDetailViewSet
+from api.v_1.sales.views import (AddToSalesBookmarksView,
+                                 RemoveFromSalesBookmarksView,
+                                 SalesDetailViewSet, SalesViewSet,
+                                 UserSalesBookmarksView)
 from api.v_1.stores.views import StoreViewSet
 from api.v_1.users.views import LoginWithCodeView, PasswordResetRequestView
 from django.urls import include, path
@@ -31,4 +34,7 @@ urlpatterns = [
     path('unique-categories/', UniqueSubcategoryView.as_view(), name='unique-categories'),
     path('auth/', include('djoser.urls.authtoken')),
     path('forecast/save_to_excel/<store_hash>/', SaveForecastExcelView.as_view(), name='save_forecast_excel'),
+    path('salesbookmarks/add/<int:sales_id>/', AddToSalesBookmarksView.as_view(), name='add_to_salesbookmarks'),
+    path('salesbookmarks/remove/<int:salesbookmark_id>/', RemoveFromSalesBookmarksView.as_view(), name='remove_from_salesbookmarks'),
+    path('salesbookmarks/', UserSalesBookmarksView.as_view(), name='user_salesbookmarks'),
 ]

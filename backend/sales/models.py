@@ -1,4 +1,5 @@
 from categories.models import Category
+from django.contrib.auth import get_user_model
 from django.db import models
 from stores.models import Store
 
@@ -62,3 +63,32 @@ class Sales(models.Model):
 
     def __str__(self):
         return f"{self.store} - {self.sku}"
+
+
+class UserSalesBookmark(models.Model):
+    """Модель закладок пользователя для сохранения данных по продажам."""
+
+    user = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.CASCADE, 
+        related_name='sales_bookmarks',
+        verbose_name='Пользователь',
+        )
+    sales = models.ForeignKey(
+        Sales,
+        on_delete=models.CASCADE,
+        related_name='sales_bookmarked_by',
+        verbose_name='Прогноз магазина',
+        )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Дата добавления',
+        )
+
+    class Meta:
+        verbose_name = 'Закладка пользователя по данным продаж.'
+        verbose_name_plural = 'Закладки пользователя по данным продаж.'
+        unique_together = [['user', 'sales', ]]
+
+    def __str__(self):
+        return f"{self.user} - {self.sales}"
