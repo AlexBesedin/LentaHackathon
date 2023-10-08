@@ -2,14 +2,16 @@ import json
 from datetime import datetime
 
 from api.v_1.sales.filters import SaleFilterBackend
-from api.v_1.sales.serializers import CreateSalesSerializer, SalesSerializer
+from api.v_1.sales.serializers import (CreateSalesSerializer, SalesSerializer,
+                                       UserSalesBookmarkSerializer)
 from api.v_1.utils.pagination import CustomPagination
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import mixins, permissions, viewsets
+from rest_framework import (generics, mixins, permissions, status, views,
+                            viewsets)
 from rest_framework.response import Response
-from api.v_1.utils.pagination import CustomPagination
-from sales.models import Sales, SalesRecord
+from sales.models import Sales, SalesRecord, UserSalesBookmark
 
 
 class SalesViewSet(
@@ -49,6 +51,58 @@ class SalesViewSet(
             return self.get_paginated_response(serializer.data)
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
+
+
+class AddToSalesBookmarksView(views.APIView):
+    """Добавляем данные по продажам в избранное"""
+
+    def post(self, request, sales_id, *args, **kwargs):
+        user = request.user
+        sales = get_object_or_404(
+            Sales,
+            id=sales_id
+        )
+        if UserSalesBookmark.objects.filter(
+            user=user,
+            sales=sales
+        ).exists():
+            return Response(
+                {'detail': 'Данные по продажам уже добавлены в избранное.'}, status=status.HTTP_400_BAD_REQUEST)
+        salesbookmark = UserSalesBookmark.objects.create(
+            user=user,
+            sales=sales
+        )
+        serializer = UserSalesBookmarkSerializer(salesbookmark)
+        return Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED
+        )
+
+
+class RemoveFromSalesBookmarksView(views.APIView):
+    """Удаляем данные по продажам из избранного"""
+
+    def delete(self, request, salesbookmark_id, *args, **kwargs):
+        user = request.user
+        salesbookmark = get_object_or_404(
+            UserSalesBookmark,
+            id=salesbookmark_id,
+            user=user,
+        )
+        salesbookmark.delete()
+        return Response(
+            {'detail': 'Удалено из закладок.'}, status=status.HTTP_204_NO_CONTENT)
+
+
+class UserSalesBookmarksView(generics.ListAPIView):
+    """Отображает список добавленого в избранное"""
+
+    serializer_class = UserSalesBookmarkSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        queryset = UserSalesBookmark.objects.filter(user=user)
+        return queryset
     
     # def list(self, request, *args, **kwargs):
     #     """Переопределенный метод для GET запроса

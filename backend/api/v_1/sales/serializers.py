@@ -1,8 +1,8 @@
-from rest_framework import serializers
 from categories.models import Category
-from stores.models import Store
-from sales.models import Sales, SalesRecord
 from django.shortcuts import get_object_or_404
+from rest_framework import serializers
+from sales.models import Sales, SalesRecord, UserSalesBookmark
+from stores.models import Store
 
 
 class SalesRecordSerialazier(serializers.ModelSerializer):
@@ -44,7 +44,7 @@ class SalesSerializer(serializers.ModelSerializer):
             'sku',
             'fact',
         ]
-        
+
     def get_store(self, obj):
         return str(obj.store)
 
@@ -64,8 +64,7 @@ class CreateSalesSerializer(serializers.ModelSerializer):
             'sku',
             'fact',
         ]
-        
-        
+
     def to_internal_value(self, data):
         internal_value = super().to_internal_value(data)
         internal_value['store'] = get_object_or_404(
@@ -78,7 +77,6 @@ class CreateSalesSerializer(serializers.ModelSerializer):
         )
         return internal_value
 
-
     def create(self, validated_data):
         fact_data = validated_data.pop('fact')
         fact_instance = SalesRecord.objects.create(**fact_data)
@@ -87,3 +85,17 @@ class CreateSalesSerializer(serializers.ModelSerializer):
             **validated_data
         )
         return sales_instance
+
+
+class UserSalesBookmarkSerializer(serializers.ModelSerializer):
+    """Сериализатор отображение избранного."""
+
+    sales = SalesSerializer(read_only=True)
+
+    class Meta:
+        model = UserSalesBookmark
+        fields = [
+            'user',
+            'sales',
+            'created_at',
+        ]

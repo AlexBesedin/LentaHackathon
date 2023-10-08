@@ -40,7 +40,7 @@ class StoreForecastViewSet(viewsets.ModelViewSet):
             serializer.data, 
             status=status.HTTP_201_CREATED
         )
-
+    
 
 class AddToBookmarksView(views.APIView):
     """Добавляем предсказание в избранное"""

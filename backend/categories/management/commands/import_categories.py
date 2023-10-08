@@ -21,7 +21,7 @@ class Command(BaseCommand):
                     subcategory=row[3],
                     category=category_product,
                 )
-                
+
                 category, created_main_category = Category.objects.get_or_create(
                     sku=row[0],
                     group=group,

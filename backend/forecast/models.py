@@ -1,10 +1,9 @@
-from django.db import models
-from django.core.exceptions import ValidationError
-from django.utils import timezone
-from django.contrib.auth import get_user_model
-
-from stores.models import Store
 from categories.models import Category
+from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
+from django.db import models
+from django.utils import timezone
+from stores.models import Store
 
 
 class StoreForecast(models.Model):
@@ -91,7 +90,7 @@ class UserBookmark(models.Model):
         verbose_name = 'Закладка прогнозов пользователя'
         verbose_name_plural = 'Закладки прогнозов пользователей'
         unique_together = [['user', 'store_forecast']]
-        
+
     def __str__(self):
         return f"{self.user} - {self.store_forecast}"
 
