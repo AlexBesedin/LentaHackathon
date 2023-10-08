@@ -1,10 +1,10 @@
 from datetime import date, timedelta
-import requests
 
+import requests
+from constants import URL_CATEGORIES, URL_FORECAST, URL_SALES, URL_STORES
 from data_services import fetch_data, get_address
-from constants import URL_CATEGORIES, URL_SALES, URL_STORES, URL_FORECAST
-from model import forecast
 from logger_config import logger
+from model import forecast
 
 
 def main(today=date.today()):

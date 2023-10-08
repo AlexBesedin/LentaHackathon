@@ -1,10 +1,10 @@
-from django.db import models
-from django.core.exceptions import ValidationError
-from django.utils import timezone
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
+from django.db import models
+from django.utils import timezone
 
-from stores.models import Store
 from categories.models import Category
+from stores.models import Store
 
 
 class StoreForecast(models.Model):

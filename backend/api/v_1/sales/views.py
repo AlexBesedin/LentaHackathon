@@ -1,15 +1,10 @@
-import json
-from datetime import datetime
+from rest_framework import mixins, permissions, viewsets
+from rest_framework.response import Response
 
 from api.v_1.sales.filters import SaleFilterBackend
 from api.v_1.sales.serializers import CreateSalesSerializer, SalesSerializer
 from api.v_1.utils.pagination import CustomPagination
-from django.http import JsonResponse
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import mixins, permissions, viewsets
-from rest_framework.response import Response
-from api.v_1.utils.pagination import CustomPagination
-from sales.models import Sales, SalesRecord
+from sales.models import Sales
 
 
 class SalesViewSet(
@@ -40,7 +35,8 @@ class SalesViewSet(
         return Response(serializer.data, status=201, headers=headers)
 
     def list(self, request, *args, **kwargs):
-        """Переопределенный метод для GET запроса на получение списка объектов Sales."""
+        """Переопределенный метод для GET запроса
+        на получение списка объектов Sales."""
 
         queryset = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(queryset)

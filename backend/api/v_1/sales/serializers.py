@@ -1,8 +1,10 @@
 from rest_framework import serializers
-from categories.models import Category
-from stores.models import Store
-from sales.models import Sales, SalesRecord
+
 from django.shortcuts import get_object_or_404
+
+from categories.models import Category
+from sales.models import Sales, SalesRecord
+from stores.models import Store
 
 
 class SalesRecordSerialazier(serializers.ModelSerializer):

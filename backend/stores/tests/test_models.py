@@ -1,5 +1,6 @@
 from django.test import TestCase
-from stores.models import StoreID, Store
+
+from stores.models import Store, StoreID
 
 
 class StoreIDModelTest(TestCase):

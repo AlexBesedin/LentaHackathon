@@ -1,6 +1,5 @@
-from rest_framework.filters import BaseFilterBackend
 from dateutil.parser import parse
-
+from rest_framework.filters import BaseFilterBackend
 
 
 class ForecastFilterBackend(BaseFilterBackend):

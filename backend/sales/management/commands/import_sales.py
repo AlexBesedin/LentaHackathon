@@ -1,10 +1,12 @@
 import csv
 from datetime import datetime
-from django.core.management.base import BaseCommand
-from sales.models import SalesRecord, Sales
-from stores.models import Store, StoreID
-from categories.models import Category
+
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.management.base import BaseCommand
+
+from categories.models import Category
+from sales.models import Sales, SalesRecord
+from stores.models import Store, StoreID
 
 
 class Command(BaseCommand):

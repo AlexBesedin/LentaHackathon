@@ -1,6 +1,7 @@
-from categories.models import Category, CategoryProduct, Group, Subcategory
 from django.conf import settings
 from django.contrib import admin
+
+from categories.models import Category, CategoryProduct, Group, Subcategory
 
 
 class GroupAdmin(admin.ModelAdmin):

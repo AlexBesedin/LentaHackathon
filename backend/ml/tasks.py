@@ -1,7 +1,8 @@
-import requests
-import os
 import logging
+import os
 from datetime import date, timedelta
+
+import requests
 from celery import shared_task
 
 # from ml.model import forecast

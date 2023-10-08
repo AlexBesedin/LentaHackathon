@@ -1,5 +1,6 @@
-from categories.models import Category, CategoryProduct, Group, Subcategory
 from rest_framework import serializers
+
+from categories.models import Category, CategoryProduct, Group, Subcategory
 
 
 class CategorySerializer(serializers.ModelSerializer):

@@ -1,6 +1,7 @@
+from decimal import Decimal
+
 from dateutil.parser import parse
 from rest_framework.filters import BaseFilterBackend
-from decimal import Decimal
 
 
 class SaleFilterBackend(BaseFilterBackend):

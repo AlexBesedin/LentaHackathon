@@ -1,11 +1,5 @@
-from django_filters import (
-    FilterSet, 
-    AllValuesMultipleFilter, 
-    ChoiceFilter, 
-    NumberFilter, 
-    CharFilter,
-    BooleanFilter
-    )
+from django_filters import (AllValuesMultipleFilter, BooleanFilter, CharFilter,
+                            ChoiceFilter, FilterSet, NumberFilter,)
 
 from stores.models import Store
 

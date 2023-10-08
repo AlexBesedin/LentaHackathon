@@ -1,7 +1,6 @@
 import requests
-
+from constants import API_HOST, API_PORT
 from logger_config import logger
-from constants import API_PORT, API_HOST
 
 
 def get_address(resource):

@@ -1,9 +1,10 @@
 from rest_framework import serializers
+
 from django.core.exceptions import ValidationError
 
 from categories.models import Category
+from forecast.models import DailySalesForecast, StoreForecast, UserBookmark
 from stores.models import Store
-from forecast.models import StoreForecast, DailySalesForecast, UserBookmark
 
 
 class DailySalesForecastSerializer(serializers.ModelSerializer):

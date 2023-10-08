@@ -1,17 +1,14 @@
-from api.v_1.categories.views import CategoryViewSet, UniqueSubcategoryView
-from api.v_1.sales.views import SalesViewSet
-from api.v_1.stores.views import StoreViewSet
-from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from api.v_1.forecast.views import (
-    AddToBookmarksView, 
-    StoreForecastViewSet, 
-    RemoveFromBookmarksView, 
-    UserBookmarksView
-    )
-from api.v_1.users.views import LoginWithCodeView, PasswordResetRequestView
+from django.urls import include, path
 
+from api.v_1.categories.views import CategoryViewSet, UniqueSubcategoryView
+from api.v_1.forecast.views import (AddToBookmarksView,
+                                    RemoveFromBookmarksView,
+                                    StoreForecastViewSet, UserBookmarksView,)
+from api.v_1.sales.views import SalesViewSet
+from api.v_1.stores.views import StoreViewSet
+from api.v_1.users.views import LoginWithCodeView, PasswordResetRequestView
 
 app_name = 'api'
 

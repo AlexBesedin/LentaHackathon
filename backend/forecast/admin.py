@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import StoreForecast, DailySalesForecast, UserBookmark
+
+from .models import DailySalesForecast, StoreForecast, UserBookmark
 
 
 @admin.register(StoreForecast)

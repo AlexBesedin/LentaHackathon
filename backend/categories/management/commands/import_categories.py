@@ -1,7 +1,8 @@
 import csv
 
-from categories.models import Category, CategoryProduct, Group, Subcategory
 from django.core.management.base import BaseCommand
+
+from categories.models import Category, CategoryProduct, Group, Subcategory
 
 
 class Command(BaseCommand):
