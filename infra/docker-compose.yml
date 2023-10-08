@@ -1,14 +1,14 @@
 version: '3.3'
 
 services:
-  # db:
-  #   image: postgres:13.0-alpine
-  #   volumes:
-  #     - postgres_data:/var/lib/postgresql/data/
-  #   environment:
-  #     POSTGRES_DB: postgres
-  #     POSTGRES_USER: postgres
-  #     POSTGRES_PASSWORD: postgres
+  db:
+    image: postgres:13.0-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
   
   backend:
     build: ../backend/
@@ -16,11 +16,11 @@ services:
     volumes:
       - static_value:/app/staticfiles/
     depends_on:
-      # - db
+      - db
       - redis
     environment:
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
   
   nginx:
     image: nginx:1.21.3-alpine
@@ -43,7 +43,7 @@ services:
       - ../backend/:/app/
     depends_on:
       - backend
-      # - db 
+      - db 
       - redis
   
   flower:
@@ -51,7 +51,7 @@ services:
     ports:
       - "5555:5555"
     environment:
-      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
     depends_on:
       - backend
       - redis
@@ -59,4 +59,4 @@ services:
 volumes:
   static_value:
   media_value:
-  # postgres_data:
+  postgres_data:
