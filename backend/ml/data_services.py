@@ -1,17 +1,41 @@
 import requests
 
-from logger_config import logger
-from constants import API_PORT, API_HOST
+from logger_config import _logger
+from constants import API_PORT, API_HOST, URL_STORES, URL_CATEGORIES, URL_SALES
 
 
 def get_address(resource):
-    return f"http://{API_PORT}:{API_HOST}/{resource}"
+    return f"http://{API_HOST}:{API_PORT}/{resource}"
 
 
-def fetch_data(url, params=None):
-    with requests.Session() as s:
-        resp = s.get(url, params=params)
-        if resp.status_code != 200:
-            logger.warning(f"Не удалось получить данные из {url}. Status code: {resp.status_code}")
-            return []
-        return resp.json().get("data", [])
+def get_stores():
+    stores_url = get_address(URL_STORES)
+    resp = requests.get(stores_url)
+    if resp.status_code != 200:
+        _logger.warning("Не удалось получить список магазинов")
+        return []
+    return resp.json()
+
+
+def get_categories():
+    categs_url = get_address(URL_CATEGORIES)
+    resp = requests.get(categs_url)
+    if resp.status_code != 200:
+        _logger.warning("Не удалось получить информацию о категории")
+        return {}
+    result = {el["sku"]: el for el in resp.json()}
+    return result
+
+
+def get_sales(store=None, sku=None):
+    sale_url = get_address(URL_SALES)
+    params = {}
+    if store is not None:
+        params["store"] = store
+    if sku is not None:
+        params["sku"] = sku
+    resp = requests.get(sale_url, params=params)
+    if resp.status_code != 200:
+        _logger.warning("Не удается получить историю продаж")
+        return []
+    return resp.json()
