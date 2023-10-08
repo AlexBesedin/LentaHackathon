@@ -1,10 +1,11 @@
-import openpyxl
+from datetime import datetime
+from io import BytesIO
 import pandas as pd
 from api.v_1.forecast.filters import ForecastFilterBackend
 from api.v_1.forecast.serializers import StoreForecastSerializer
 from api.v_1.utils.pagination import CustomPagination
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
+from django.http import Http404, HttpResponse
+from django.shortcuts import get_list_or_404, get_object_or_404
 from forecast.models import StoreForecast, UserBookmark
 from rest_framework import generics, status, views, viewsets, mixins
 from rest_framework.response import Response
@@ -100,22 +101,32 @@ class UserBookmarksView(generics.ListAPIView):
 
 
 class SaveForecastExcelView(APIView):
-    """Функция сохранения прогноза в excel."""  # отображает кракозябру
+    """Функция сохранения прогноза в excel."""
 
-    def get(self, request, forecast_id):
-        forecast = get_object_or_404(StoreForecast, id=forecast_id)
-        queryset = self.get_queryset()
-        forecast_data = self.list(request, queryset=queryset).data
+    def get(self, request, store_hash):
+        """Получение и сохранение предсказаний для конкретного магазина"""
+        
+        forecasts = get_list_or_404(
+            StoreForecast, 
+            store__store__title=store_hash)
+        forecast_data = [StoreForecastSerializer(forecast).data for forecast in forecasts]
+        store_name = forecasts[0].store.store.title if forecasts else "неизвестный магазин"
         df = pd.DataFrame(forecast_data)
-        file_path = 'forecast_data.xlsx'
-        df.to_excel(file_path, index=False)
-        response = HttpResponse(open(file_path, 'rb'), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-        response['Content-Disposition'] = 'attachment; filename="forecast_data.xlsx"'
+
+        df.rename(columns={
+            'store': 'Магазин',
+            'sku': 'Артикул',
+            'forecast_date': 'Дата прогноза',
+            'forecast': 'Прогноз'
+        }, inplace=True)
+        
+        output = BytesIO()
+        with pd.ExcelWriter(output, engine='openpyxl') as writer:
+            df.to_excel(writer, index=False)
+        output.seek(0)
+        current_date = datetime.now().strftime("%Y-%m-%d")
+        filename = f"{store_name}_forecast_{current_date}.xlsx"
+        response = HttpResponse(output.read(), 
+                                content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = f'attachment; filename="{filename}.xlsx"'
         return response
-
-    def get_queryset(self):
-        return StoreForecast.objects.all()
-
-    def list(self, request, queryset):
-        serializer = StoreForecastSerializer(queryset, many=True)
-        return serializer

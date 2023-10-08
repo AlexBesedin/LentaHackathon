@@ -30,5 +30,5 @@ urlpatterns = [
     path('bookmarks/', UserBookmarksView.as_view(), name='user_bookmarks'),
     path('unique-categories/', UniqueSubcategoryView.as_view(), name='unique-categories'),
     path('auth/', include('djoser.urls.authtoken')),
-    path('forecast/save-excel/<int:forecast_id>/', SaveForecastExcelView.as_view(), name='save_forecast_excel'), # отображает кракозябру
+    path('forecast/save_to_excel/<store_hash>/', SaveForecastExcelView.as_view(), name='save_forecast_excel'),
 ]
