@@ -238,3 +238,89 @@ from datetime import timedelta
 
 CELERY_TIMEZONE = 'UTC'
 
+
+#Логгирование проекта
+
+LOGGING_DIR = os.path.join(BASE_DIR, 'logs')
+if not os.path.exists(LOGGING_DIR):
+    os.makedirs(LOGGING_DIR)
+    
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(LOGGING_DIR, 'debug.log'),
+            'formatter': 'verbose',
+        },
+        'console': {
+            'level': 'ERROR',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file', 'console'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'django.request': {
+            'handlers': ['file', 'console'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'rest_framework': {
+            'handlers': ['file', 'console'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'sales': {
+            'handlers': ['file', 'console'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'categories': {
+            'handlers': ['file', 'console'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'stores': {
+            'handlers': ['file', 'console'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'api': {
+            'handlers': ['file', 'console'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'forecast': {
+            'handlers': ['file', 'console'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'users': {
+            'handlers': ['file', 'console'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'celery': {
+            'handlers': ['file', 'console'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    },
+}
