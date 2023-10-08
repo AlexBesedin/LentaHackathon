@@ -1,8 +1,8 @@
-from rest_framework import serializers
 from categories.models import Category, CategoryProduct, Group
-from stores.models import Store
-from sales.models import Sales, SalesRecord
 from django.shortcuts import get_object_or_404
+from rest_framework import serializers
+from sales.models import Sales, SalesRecord, UserSalesBookmark
+from stores.models import Store
 
 
 class SalesRecordSerialazier(serializers.ModelSerializer):
@@ -182,3 +182,17 @@ class CombinedSalesSerializer(serializers.ModelSerializer):
 
     def get_uom(self, obj):
         return obj.sku.get_uom_display()
+    
+
+class UserSalesBookmarkSerializer(serializers.ModelSerializer):
+    """Сериализатор отображение избранного."""
+
+    sales = SalesSerializer(read_only=True)
+
+    class Meta:
+        model = UserSalesBookmark
+        fields = [
+            'user',
+            'sales',
+            'created_at',
+        ]
