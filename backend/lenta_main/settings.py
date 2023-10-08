@@ -231,7 +231,7 @@ from datetime import timedelta
 
 # CELERY_BEAT_SCHEDULE = {
 #     'run_main_every_10_min': {
-#         'task': 'ml.tasks.main',  # имя вашей задачи в формате 'app_name.tasks.function_name'
+#         'task': 'ml.tasks.main', 
 #         'schedule': timedelta(minutes=10),
 #     },
 # }
