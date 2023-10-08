@@ -7,7 +7,3 @@ URL_FORECAST = "api/v1/forecast/"
 
 API_PORT = "8000"
 API_HOST = "backend"
-
-
-# API_PORT = os.environ.get("API_PORT")
-# API_HOST = os.environ.get("API_PORT")

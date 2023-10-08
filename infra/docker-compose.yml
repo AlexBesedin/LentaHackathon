@@ -13,12 +13,6 @@ services:
   backend:
     build: ../backend/
     restart: always
-    command: >
-      bash -c "python manage.py migrate&&
-      python manage.py import_stores&&
-      python manage.py import_categories&&
-      python manage.py import_sales&&
-      python manage.py collectstatic --no-input"
     volumes:
       - static_value:/app/staticfiles/
     depends_on:
