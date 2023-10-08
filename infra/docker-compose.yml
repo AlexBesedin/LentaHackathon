@@ -16,7 +16,7 @@ services:
     volumes:
       - static_value:/app/staticfiles/
     depends_on:
-      - db
+      # - db
       - redis
     environment:
       - CELERY_BROKER_URL=redis://redis:6379/0
@@ -43,7 +43,7 @@ services:
       - ../backend/:/app/
     depends_on:
       - backend
-      - db 
+      # - db 
       - redis
   
   flower:
@@ -59,4 +59,4 @@ services:
 volumes:
   static_value:
   media_value:
-  postgres_data:
+  # postgres_data:

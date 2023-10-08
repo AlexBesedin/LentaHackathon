@@ -76,20 +76,20 @@ def forecast(sales: dict, item_info: dict, store_info: dict) -> list:
 
                           }, inplace=True)
 
-    product_labels = pd.read_csv('data_ml/products_labels.csv')
+    product_labels = pd.read_csv('ml/data_ml/products_labels.csv')
     product_labels = product_labels[['product_clasters', 'pr_sku_id']]
     forecast_dates = pd.merge(forecast_dates, product_labels, on="pr_sku_id")
 
-    price_labels = pd.read_csv('data_ml/price_labels.csv')
+    price_labels = pd.read_csv('ml/data_ml/price_labels.csv')
     price_labels = price_labels[['price_clasters', 'pr_sku_id']]
     forecast_dates = pd.merge(forecast_dates, price_labels, on="pr_sku_id")
-    prophet_m = joblib.load('data_ml/proph.pkl')
+    prophet_m = joblib.load('ml/data_ml/proph.pkl')
     future = prophet_m.make_future_dataframe(periods=100, freq='D')
     forecast = prophet_m.predict(future)
     forecast['date'] = forecast['ds']
     forecast = forecast[['trend', 'date', 'trend_upper', 'trend_lower', 'yhat']]
     forecast_dates = pd.merge(forecast_dates, forecast, on='date')
-    holidays_df = pd.read_csv('data_ml/holidays_covid_calendar.csv')
+    holidays_df = pd.read_csv('ml/data_ml/holidays_covid_calendar.csv')
     list_col = ['date', 'holiday']
     holidays_df['date'] = pd.to_datetime(holidays_df['date'], format = '%d.%m.%Y')
     forecast_dates = forecast_dates.merge(holidays_df[list_col], on="date", how='inner')
@@ -118,8 +118,8 @@ def forecast(sales: dict, item_info: dict, store_info: dict) -> list:
     forecast_dates['lag_13'] = 0
     forecast_dates['lag_14'] = 0
 
-    model_price = joblib.load('data_ml/model_price_2.pkl')
-    model_units = joblib.load('data_ml/model_cb-2.pkl')
+    model_price = joblib.load('ml/data_ml/model_price_2.pkl')
+    model_units = joblib.load('ml/data_ml/model_cb-2.pkl')
 
     result = []
     for index, row in forecast_dates.iterrows():

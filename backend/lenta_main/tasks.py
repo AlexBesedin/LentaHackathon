@@ -2,10 +2,10 @@ import requests
 from datetime import date, timedelta
 from celery import shared_task
 
-from logger_config import _logger
-from model import forecast
-from constants import URL_FORECAST
-from data_services import get_address, get_stores, get_categories, get_sales
+from ml.logger_config import _logger
+from ml.model import forecast
+from ml.constants import URL_FORECAST
+from ml.data_services import get_address, get_stores, get_categories, get_sales
 
 
 @shared_task
@@ -56,7 +56,6 @@ def main(today=date.today()):
                     _logger.error(f"Не удалось отправить данные! Код состояния: {response.status_code}, Response text: {response.text}")
         else:
             _logger.warning(f"Нет данных для передачи в магазин {store['store']}")
-        
-        
+
 if __name__ == "__main__":
-    main()
+    main.delay()
