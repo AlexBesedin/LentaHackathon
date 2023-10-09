@@ -11,7 +11,8 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
   
   backend:
-    build: ../backend/
+    # build: ../backend/
+    image: beszedin/lenta:latest
     restart: always
     volumes:
       - static_value:/app/staticfiles/

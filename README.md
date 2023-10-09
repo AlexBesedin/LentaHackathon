@@ -70,7 +70,7 @@ sudo docker-compose exec backend python manage.py import_sales
 #### *Примечание: Данная команда запустит инференс прогноза, который сделает запросы в базу данных, после передаст данные в DS модель, и полученный прогноз от DS модели запишет в базу данных в модель Forecast.
 
 ```sh
-celery -A lenta_main call lenta_main.tasks.main
+sudo docker-compose exec backend celery -A lenta_main call lenta_main.tasks.main
 ```
 #### * На продакшене, необходимо выставить время, когда будет выполняться асинхронная задача прогноза. Выполнение задачи будет происходит в фоновом режиме.
 
