@@ -34,7 +34,7 @@ git clone git@github.com:AlexBesedin/LentaHackathon.git
 
 ### Создайте файл содержащий переменные виртуального окружения (.env)
 ```sh
-cd LentaHackathon
+cd LentaHackathon/infra
 touch .env
 ```
 
