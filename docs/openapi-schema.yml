@@ -1,0 +1,786 @@
+swagger: '2.0'
+info:
+  title: LENTA API
+  description: Предсказание временных рядом
+  version: v1
+host: 127.0.0.1:8080
+schemes:
+- http
+basePath: /api/v1
+consumes:
+- application/json
+produces:
+- application/json
+securityDefinitions:
+  Basic:
+    type: basic
+security:
+- Basic: []
+paths:
+  /auth/token/login/:
+    post:
+      operationId: auth_token_login_create
+      description: Use this endpoint to obtain user authentication token.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TokenCreate'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/TokenCreate'
+      tags:
+      - auth
+    parameters: []
+  /auth/token/logout/:
+    post:
+      operationId: auth_token_logout_create
+      description: Use this endpoint to logout user (remove user authentication token).
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - auth
+    parameters: []
+  /categories/:
+    get:
+      operationId: categories_list
+      description: Вьюсет для товарной иерархии.
+      parameters:
+      - name: sku
+        in: query
+        description: sku
+        required: false
+        type: string
+      - name: group__group
+        in: query
+        description: group__group
+        required: false
+        type: string
+      - name: category__category
+        in: query
+        description: category__category
+        required: false
+        type: string
+      - name: subcategory__subcategory
+        in: query
+        description: subcategory__subcategory
+        required: false
+        type: string
+      - name: group
+        in: query
+        description: group
+        required: false
+        type: string
+      - name: category
+        in: query
+        description: category
+        required: false
+        type: string
+      - name: subcategory
+        in: query
+        description: subcategory
+        required: false
+        type: string
+      - name: uom
+        in: query
+        description: uom
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      - name: limit
+        in: query
+        description: Number of results to return per page.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Category'
+      tags:
+      - categories
+    parameters: []
+  /categories/{sku}/:
+    get:
+      operationId: categories_read
+      description: Вьюсет для товарной иерархии.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Category'
+      tags:
+      - categories
+    parameters:
+    - name: sku
+      in: path
+      required: true
+      type: string
+  /detail-sales/:
+    get:
+      operationId: detail-sales_list
+      description: |-
+        Переопределенный метод для GET запроса
+        на получение списка объектов Sales.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/CombinedSales'
+      tags:
+      - detail-sales
+    parameters: []
+  /detail-sales/{id}/:
+    get:
+      operationId: detail-sales_read
+      description: Детали продажи detail-sales
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/CombinedSales'
+      tags:
+      - detail-sales
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this Продажа.
+      required: true
+      type: integer
+  /forecast/:
+    get:
+      operationId: forecast_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/StoreForecast'
+      tags:
+      - forecast
+    post:
+      operationId: forecast_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/StoreForecastCreate'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/StoreForecastCreate'
+      tags:
+      - forecast
+    parameters: []
+  /forecast/bookmarks/:
+    get:
+      operationId: forecast_bookmarks_list
+      description: Отображает список добавленого в избранное
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/UserBookmark'
+      tags:
+      - forecast
+    parameters: []
+  /forecast/bookmarks_add/{forecast_id}/:
+    post:
+      operationId: forecast_bookmarks_add_create
+      description: Добавляем предсказание в избранное
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - forecast
+    parameters:
+    - name: forecast_id
+      in: path
+      required: true
+      type: string
+  /forecast/bookmarks_remove/{bookmark_id}/:
+    delete:
+      operationId: forecast_bookmarks_remove_delete
+      description: Удаляем предсказание из избранного
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - forecast
+    parameters:
+    - name: bookmark_id
+      in: path
+      required: true
+      type: string
+  /forecast/save_to_excel/{store_hash}/:
+    get:
+      operationId: forecast_save_to_excel_read
+      description: Получение и сохранение предсказаний для конкретного магазина
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - forecast
+    parameters:
+    - name: store_hash
+      in: path
+      required: true
+      type: string
+  /sales/:
+    get:
+      operationId: sales_list
+      description: |-
+        Переопределенный метод для GET запроса
+        на получение списка объектов Sales.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Sales'
+      tags:
+      - sales
+    post:
+      operationId: sales_create
+      description: Функция создания категории.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/CreateSales'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/CreateSales'
+      tags:
+      - sales
+    parameters: []
+  /sales/bookmarks/:
+    get:
+      operationId: sales_bookmarks_list
+      description: Отображает список добавленого в избранное
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/UserSalesBookmark'
+      tags:
+      - sales
+    parameters: []
+  /sales/bookmarks_add/{sales_id}/:
+    post:
+      operationId: sales_bookmarks_add_create
+      description: Добавляем данные по продажам в избранное
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - sales
+    parameters:
+    - name: sales_id
+      in: path
+      required: true
+      type: string
+  /sales/bookmarks_remove/{salesbookmark_id}/:
+    delete:
+      operationId: sales_bookmarks_remove_delete
+      description: Удаляем данные по продажам из избранного
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - sales
+    parameters:
+    - name: salesbookmark_id
+      in: path
+      required: true
+      type: string
+  /shops/:
+    get:
+      operationId: shops_list
+      description: Функция отображения списка магазинов.
+      parameters:
+      - name: store_exact
+        in: query
+        description: Точное название магазина
+        required: false
+        type: string
+      - name: store_contains
+        in: query
+        description: Содержит в названии магазина
+        required: false
+        type: string
+      - name: city_exact
+        in: query
+        description: Точный город
+        required: false
+        type: string
+      - name: city_contains
+        in: query
+        description: Содержит в названии города
+        required: false
+        type: string
+      - name: division
+        in: query
+        description: Дивизион
+        required: false
+        type: string
+      - name: type_format
+        in: query
+        description: Тип формата
+        required: false
+        type: string
+      - name: loc
+        in: query
+        description: Местоположение
+        required: false
+        type: string
+      - name: size
+        in: query
+        description: Размер
+        required: false
+        type: string
+      - name: is_active
+        in: query
+        description: Статус активности
+        required: false
+        type: string
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Store'
+      tags:
+      - shops
+    parameters: []
+  /shops/{store}/:
+    get:
+      operationId: shops_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Store'
+      tags:
+      - shops
+    parameters:
+    - name: store
+      in: path
+      required: true
+      type: string
+  /unique-categories/:
+    get:
+      operationId: unique-categories_list
+      description: Дополнительная логика для отображения уникальных categories
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/UniqueCategory'
+      tags:
+      - unique-categories
+    parameters: []
+  /users/login-with-code/:
+    post:
+      operationId: users_login-with-code_create
+      description: Представление для обработки запроса на вход с использованием кода.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/LoginWithCode'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/LoginWithCode'
+      tags:
+      - users
+    parameters: []
+  /users/reset-password/:
+    post:
+      operationId: users_reset-password_create
+      description: Представление для обработки запроса на сброс пароля.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/PasswordResetRequest'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/PasswordResetRequest'
+      tags:
+      - users
+    parameters: []
+definitions:
+  TokenCreate:
+    type: object
+    properties:
+      password:
+        title: Password
+        type: string
+        minLength: 1
+      email:
+        title: Email
+        type: string
+        minLength: 1
+  Category:
+    required:
+    - sku
+    - group
+    - category
+    - subcategory
+    - uom
+    type: object
+    properties:
+      sku:
+        title: Захэшированное id товара
+        type: string
+        maxLength: 50
+        minLength: 1
+      group:
+        title: Group
+        type: integer
+      category:
+        title: Category
+        type: integer
+      subcategory:
+        title: Subcategory
+        type: integer
+      uom:
+        title: Маркер, обозначающий продаётся товар на вес или в ШТ
+        type: integer
+        enum:
+        - 1
+        - 17
+  SalesRecordSerialazier:
+    required:
+    - date
+    - sales_type
+    - sales_units
+    - sales_units_promo
+    - sales_rub
+    - sales_rub_promo
+    type: object
+    properties:
+      date:
+        title: Date
+        type: string
+        format: date
+      sales_type:
+        title: Sales type
+        type: integer
+      sales_units:
+        title: Sales units
+        type: integer
+      sales_units_promo:
+        title: Sales units promo
+        type: integer
+      sales_rub:
+        title: Sales rub
+        type: string
+        format: decimal
+      sales_rub_promo:
+        title: Sales rub promo
+        type: string
+        format: decimal
+  CombinedSales:
+    required:
+    - store
+    - sku
+    - group
+    - category
+    type: object
+    properties:
+      store:
+        title: Store
+        type: string
+        minLength: 1
+      sku:
+        title: Sku
+        type: string
+        minLength: 1
+      group:
+        title: Group
+        type: string
+        minLength: 1
+      category:
+        title: Category
+        type: string
+        minLength: 1
+      uom:
+        title: Uom
+        type: string
+        readOnly: true
+      fact:
+        type: array
+        items:
+          $ref: '#/definitions/SalesRecordSerialazier'
+        readOnly: true
+  StoreForecast:
+    required:
+    - store
+    - sku
+    - forecast_date
+    type: object
+    properties:
+      store:
+        title: Store
+        type: string
+        minLength: 1
+      sku:
+        title: Sku
+        type: string
+        minLength: 1
+      forecast_date:
+        title: Дата прогноза
+        type: string
+        format: date
+      forecast:
+        title: Forecast
+        type: string
+        readOnly: true
+  DailySalesForecast:
+    required:
+    - date
+    - target
+    type: object
+    properties:
+      date:
+        title: Дата(день)
+        type: string
+        format: date
+      target:
+        title: Спрос в ШТ.
+        type: integer
+  StoreForecastCreate:
+    required:
+    - store
+    - sku
+    - forecast_date
+    - sales_units
+    type: object
+    properties:
+      store:
+        title: Store
+        type: string
+        minLength: 1
+      sku:
+        title: Sku
+        type: string
+        minLength: 1
+      forecast_date:
+        title: Дата прогноза
+        type: string
+        format: date
+      sales_units:
+        type: array
+        items:
+          $ref: '#/definitions/DailySalesForecast'
+  UserBookmark:
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      store_forecast:
+        $ref: '#/definitions/StoreForecast'
+      created_at:
+        title: Дата добавления
+        type: string
+        format: date-time
+        readOnly: true
+  Sales:
+    type: object
+    properties:
+      store:
+        title: Store
+        type: string
+        readOnly: true
+      sku:
+        title: Sku
+        type: string
+        readOnly: true
+      fact:
+        type: array
+        items:
+          $ref: '#/definitions/SalesRecordSerialazier'
+        readOnly: true
+  CreateSales:
+    required:
+    - store
+    - sku
+    - facts
+    type: object
+    properties:
+      store:
+        title: Store
+        type: string
+        minLength: 1
+      sku:
+        title: Sku
+        type: string
+        minLength: 1
+      facts:
+        type: array
+        items:
+          $ref: '#/definitions/SalesRecordSerialazier'
+  UserSalesBookmark:
+    required:
+    - user
+    type: object
+    properties:
+      user:
+        title: Пользователь
+        type: integer
+      sales:
+        $ref: '#/definitions/Sales'
+      created_at:
+        title: Дата добавления
+        type: string
+        format: date-time
+        readOnly: true
+  Store:
+    required:
+    - city
+    - division
+    - type_format
+    - loc
+    type: object
+    properties:
+      store:
+        title: Store
+        type: string
+        readOnly: true
+      city:
+        title: Захэшированное id города
+        type: string
+        maxLength: 50
+        minLength: 1
+      division:
+        title: Захэшированное id дивизиона
+        type: string
+        maxLength: 50
+        minLength: 1
+      type_format:
+        title: Id формата магазина
+        type: integer
+      loc:
+        title: Id тип локации/окружения магазина
+        type: integer
+      size:
+        title: Id типа размера магазина
+        type: integer
+        x-nullable: true
+      is_active:
+        title: Is active
+        type: string
+        readOnly: true
+  UniqueCategory:
+    required:
+    - group
+    - category
+    type: object
+    properties:
+      group:
+        title: Group
+        type: string
+        minLength: 1
+      category:
+        title: Category
+        type: string
+        minLength: 1
+      uom:
+        title: Uom
+        type: string
+        readOnly: true
+  LoginWithCode:
+    required:
+    - email
+    - code
+    type: object
+    properties:
+      email:
+        title: Email
+        type: string
+        format: email
+        minLength: 1
+      code:
+        title: Code
+        type: string
+        minLength: 1
+  PasswordResetRequest:
+    required:
+    - email
+    type: object
+    properties:
+      email:
+        title: Email
+        type: string
+        format: email
+        minLength: 1

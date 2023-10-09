@@ -1,0 +1,63 @@
+version: '3.3'
+
+services:
+  db:
+    image: postgres:13.0-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+  
+  backend:
+    build: ../backend/
+    # image: beszedin/lenta:latest
+    restart: always
+    volumes:
+      - static_value:/app/staticfiles/
+    depends_on:
+      - db
+      - redis
+    environment:
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+      - CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
+  
+  nginx:
+    image: nginx:1.21.3-alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ../docs/:/usr/share/nginx/html/api/docs/
+      - static_value:/var/html/staticfiles/
+    depends_on:
+      - backend
+  
+  redis:
+    image: redis:latest
+  
+  celery:
+    build: ../backend/
+    command: celery -A lenta_main worker -l info
+    volumes:
+      - ../backend/:/app/
+    depends_on:
+      - backend
+      - db 
+      - redis
+  
+  flower:
+    image: mher/flower
+    ports:
+      - "5555:5555"
+    environment:
+      - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+    depends_on:
+      - backend
+      - redis
+
+volumes:
+  static_value:
+  media_value:
+  postgres_data:
