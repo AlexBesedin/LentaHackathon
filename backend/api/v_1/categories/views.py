@@ -1,7 +1,6 @@
 from django.db import models
-from django.http import JsonResponse
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import permissions, status, viewsets
+from rest_framework import status, viewsets
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 
@@ -25,19 +24,13 @@ class CategoryViewSet(viewsets.ModelViewSet):
     ordering_fields = '__all__'
     pagination_class = CustomPagination
 
-    # def get_queryset(self):
-    #     """
-    #     Этот метод получает все объекты Category и фильтрует их 
-    #     на основе параметров запроса.
-    #     """
-    #     queryset = Category.objects.all()
-    #     filter_fields = ['sku', 'group__group', 'category__category', 'subcategory__subcategory']
-    #     filters = {}
-    #     for field in filter_fields:
-    #         value = self.request.query_params.get(field, None)
-    #         if value is not None:
-    #             filters[field] = value 
-    #     return queryset.filter(**filters)
+    def list(self, request, *args, **kwargs):
+        """Функция отображения списка категорий"""
+
+        queryset = self.get_queryset()
+        page = self.paginate_queryset(queryset)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
     def create(self, request, *args, **kwargs):
         """Функция добавления категорий товаров"""
@@ -52,20 +45,20 @@ class CategoryViewSet(viewsets.ModelViewSet):
             headers=headers,
         )
 
-    def get_categories(request):
-        """Функция получения исторических данных по категориям."""
+    # def get_categories(request):
+    #     """Функция получения исторических данных по категориям."""
 
-        categories = Category.objects.all()
-        data = []
-        for category in categories:
-            data.append({
-                'sku': category.sku,
-                'group': category.group.group,
-                'category': category.category,
-                'subcategory': category.subcategory.subcategory,
-                'uom': category.uom
-            })
-        return JsonResponse({'data': data})
+    #     categories = Category.objects.all()
+    #     data = []
+    #     for category in categories:
+    #         data.append({
+    #             'sku': category.sku,
+    #             'group': category.group.group,
+    #             'category': category.category,
+    #             'subcategory': category.subcategory.subcategory,
+    #             'uom': category.uom
+    #         })
+    #     return JsonResponse({'data': data})
 
 
 class UniqueSubcategoryView(ListAPIView):

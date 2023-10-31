@@ -95,23 +95,23 @@ WSGI_APPLICATION = 'lenta_main.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.postgresql'),
-        'NAME': os.getenv('DB_NAME', 'postgres'),
-        'USER': os.getenv('DB_USER', 'postgres'),
-        'PASSWORD': os.getenv('DB_PASSWORD', 'postgres'),
-        'HOST': os.getenv('DB_HOST', 'db'),
-        'PORT': os.getenv('DB_PORT', '5432'),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.postgresql'),
+#         'NAME': os.getenv('DB_NAME', 'postgres'),
+#         'USER': os.getenv('DB_USER', 'postgres'),
+#         'PASSWORD': os.getenv('DB_PASSWORD', 'postgres'),
+#         'HOST': os.getenv('DB_HOST', 'db'),
+#         'PORT': os.getenv('DB_PORT', '5432'),
+#     }
+# }
 
 
 # Password validation
@@ -173,9 +173,9 @@ REST_FRAMEWORK = {
     # 'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend',],
     # "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     # 'PAGE_SIZE': 6,
-    # "DEFAULT_PAGINATION_CLASS": "api.v_1.utils.pagination.CustomPagination",
-    # "PAGE_SIZE": 6,
-    # "SEARCH_PARAM": "name",
+    "DEFAULT_PAGINATION_CLASS": "api.v_1.utils.pagination.CustomPagination",
+    "PAGE_SIZE": 10,
+    "SEARCH_PARAM": "name",
 
 
 }
