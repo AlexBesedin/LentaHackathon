@@ -67,7 +67,6 @@ class UniqueSubcategoryView(ListAPIView):
     serializer_class = UniqueCategorySerializer
 
     def get_queryset(self):
-
         unique_category_ids = Category.objects.values('category').annotate(min_id=models.Min('id')).values('min_id')
         return Category.objects.filter(id__in=unique_category_ids)
 

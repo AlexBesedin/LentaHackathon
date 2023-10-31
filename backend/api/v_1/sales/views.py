@@ -1,13 +1,7 @@
-import json
-from datetime import datetime
-
-from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-# from django.http import JsonResponse
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import (generics, mixins, permissions, status, views,
+
+from rest_framework import (generics, mixins, status, views,
                             viewsets)
-from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 
 from api.v_1.sales.filters import SaleFilterBackend, SalesDetailBackend
@@ -15,7 +9,7 @@ from api.v_1.sales.serializers import (CombinedSalesSerializer,
                                        CreateSalesSerializer, SalesSerializer,
                                        UserSalesBookmarkSerializer)
 from api.v_1.utils.pagination import CustomPagination
-from sales.models import Sales, SalesRecord, UserSalesBookmark
+from sales.models import Sales, UserSalesBookmark
 
 
 class SalesViewSet(
@@ -28,7 +22,7 @@ class SalesViewSet(
     # permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     http_method_names = ['get', 'post']
     lookup_field = 'store'
-    # pagination_class = CustomPagination
+    pagination_class = CustomPagination
     filter_backends = [SaleFilterBackend]
 
     def get_serializer_class(self):
@@ -45,25 +39,16 @@ class SalesViewSet(
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=201, headers=headers)
 
-    # def list(self, request, *args, **kwargs):
-    #     """Переопределенный метод для GET запроса на получение списка объектов Sales."""
-
-    #     queryset = self.filter_queryset(self.get_queryset())
-    #     page = self.paginate_queryset(queryset)
-    #     if page is not None:
-    #         serializer = SalesSerializer(page, many=True)
-    #         return self.get_paginated_response(serializer.data)
-    #     serializer = self.get_serializer(page, many=True)
-    #     return self.get_paginated_response(serializer.data)
-
     def list(self, request, *args, **kwargs):
-        """Переопределенный метод для GET запроса
-        на получение списка объектов Sales."""
+        """Переопределенный метод для GET запроса на получение списка объектов Sales."""
 
-        queryset = self.filter_queryset(self.get_queryset())
-        serializer = SalesSerializer(queryset, many=True)
-        return Response(serializer.data)
-
+        queryset = self.filter_queryset(self.get_queryset().order_by('id'))
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = SalesSerializer(page, many=True)
+        else:
+            serializer = self.get_serializer(queryset, many=True)
+        return self.get_paginated_response(serializer.data)
 
 class SalesDetailViewSet(viewsets.ModelViewSet):
     """Детали продажи detail-sales"""
@@ -71,8 +56,6 @@ class SalesDetailViewSet(viewsets.ModelViewSet):
     queryset = Sales.objects.all()
     serializer_class = CombinedSalesSerializer
     http_method_names = ['get', ]
-    # filter_backends = (DjangoFilterBackend,)
-    # filterset_class = SalesFilter
     filter_backends = [SalesDetailBackend]
 
     def list(self, request, *args, **kwargs):

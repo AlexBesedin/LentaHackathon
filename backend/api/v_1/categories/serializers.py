@@ -15,7 +15,8 @@ class CategorySerializer(serializers.ModelSerializer):
     subcategory = serializers.PrimaryKeyRelatedField(
         queryset=Subcategory.objects.all()
     )
-
+    uom = serializers.SerializerMethodField()
+    
     class Meta:
         model = Category
         fields = (
@@ -32,6 +33,9 @@ class CategorySerializer(serializers.ModelSerializer):
         representation['category'] = instance.category.category
         representation['subcategory'] = instance.subcategory.subcategory
         return representation
+
+    def get_uom(self, obj):
+        return obj.get_uom_display()
 
 
 class UniqueCategorySerializer(serializers.ModelSerializer):

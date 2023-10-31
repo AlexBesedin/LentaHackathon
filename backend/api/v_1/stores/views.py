@@ -1,13 +1,11 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
-from rest_framework.response import Response
 
 from api.v_1.stores.filters import StoreFilter
+from api.v_1.utils.pagination import CustomPagination
 from stores.models import Store
 
 from .serializers import StoreSerializer
-
-# from api.v_1.utils.pagination import CustomPagination
 
 
 class StoreViewSet(viewsets.ReadOnlyModelViewSet):
@@ -20,17 +18,8 @@ class StoreViewSet(viewsets.ReadOnlyModelViewSet):
     lookup_field = 'store'
     filter_backends = [DjangoFilterBackend]
     filterset_class = StoreFilter
-    # filterset_fields = [
-    #     'store__title',
-    #     'city',
-    #     'division',
-    #     'type_format',
-    #     'loc',
-    #     'size',
-    #     'is_active',
-    # ]
     ordering_fields = '__all__'
-    # pagination_class = CustomPagination
+    pagination_class = CustomPagination
 
     def get_queryset(self):
         queryset = Store.objects.all()
@@ -56,10 +45,7 @@ class StoreViewSet(viewsets.ReadOnlyModelViewSet):
     def list(self, request, *args, **kwargs):
         """Функция отображения списка магазинов."""
 
-        # queryset = self.get_queryset()
-        # page = self.paginate_queryset(queryset)
-        # serializer = self.get_serializer(page, many=True)
-        # return self.get_paginated_response(serializer.data)
-        queryset = self.filter_queryset(self.get_queryset())
-        serializer = StoreSerializer(queryset, many=True)
-        return Response(serializer.data)
+        queryset = self.get_queryset()
+        page = self.paginate_queryset(queryset)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
