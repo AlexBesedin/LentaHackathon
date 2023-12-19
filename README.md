@@ -6,6 +6,10 @@
 - [Беседин Алексей](https://github.com/AlexBesedin)
 - [Карина Виктория](https://github.com/vic-k-777)
 
+## Data Science:
+- [Daria Kashina](https://github.com/daria-kashina)
+- [Pavel Fetisov](https://github.com/tupperq)
+
 ## Архитектура бэкенд системы
 
 - Django приложение: основной компонент системы, который обрабатывает входящие HTTP-запросы и взаимодействует с другими компонентами системы
